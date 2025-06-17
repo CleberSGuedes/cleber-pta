@@ -1,0 +1,413 @@
+{% extends 'base.html' %}
+
+{% block title %}Subação/Entrega(s){% endblock %}
+
+{% block content %}
+<!-- 🔔 MENSAGENS FLASH -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<div class="row">
+    <!-- ETAPA 7 - Cadastrar Subação/Entrega -->
+    <div class="col-md-6">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header etapa-titulo">Etapa 7 - Cadastrar Subação/Entrega(s)</div>
+            <div class="card-body font-sistema">
+                <p><strong>Programa Governo:</strong> {{ programa.nome }}</p>
+                <p><strong>Função:</strong> {{ programa.funcao }}</p>
+                <p><strong>Subfunção:</strong> {{ acao.subfuncao }}</p>
+                <p><strong>Ação (PAOE):</strong> {{ acao.acao_paoe }}</p>
+                <p><strong>Produto da Ação:</strong> {{ produto.nome }}</p>
+
+                <!-- Tabela de visualização -->
+                <div class="table-responsive mb-3">
+                    <form method="post" id="formExcluirSubacao">
+                        <table class="table table-bordered table-hover text-center">
+                            <thead class="table-light">
+                                <tr>
+                                    <th class="text-nowrap">Selecionar</th>
+                                    <th class="text-nowrap">Subação/Entrega</th>
+                                    <th class="text-nowrap">Produto da Entrega</th>
+                                    <th class="text-nowrap">Unidade Gestora</th>
+                                    <th class="text-nowrap">Un. Setorial de Plan.</th>
+                                    <th class="text-nowrap">Unidade de Medida</th>
+                                    <th class="text-nowrap">Quantidade</th>
+                                    <th class="text-nowrap">Detalhamento do Produto</th>
+                                    <th class="text-nowrap">Responsável</th>
+                                    <th class="text-nowrap">CPF</th>
+                                    <th class="text-nowrap">E-mail</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for s in registros %}
+                                <tr>
+                                    <td><input type="radio" name="subacaoSelecionada" value="{{ s.id }}"></td>
+                                    <td>{{ s.subacao_entrega }}</td> <!-- Agora já vem concatenado do backend -->
+                                    <td>{{ s.produto_subacao }}</td>
+                                    <td>{{ s.unidade_gestora }}</td>
+                                    <td>{{ s.unidade_setorial }}</td>
+                                    <td>{{ s.unidade_medida }}</td>
+                                    <td>{{ s.quantidade }}</td>
+                                    <td>{{ s.detalhamento }}</td>
+                                    <td>{{ s.responsavel }}</td>
+                                    <td>{{ s.cpf }}</td>
+                                    <td>{{ s.email }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <a href="{{ url_for('cadastrar_produto_acao', programa_id=programa.id, acao_id=acao.id) }}" class="btn btn-secondary">Voltar</a>
+                        <button type="button" class="btn btn-success me-2" onclick="abrirFormularioSubacao()">+ Cadastrar</button>
+                        <button type="button" class="btn btn-warning me-2" onclick="abrirFormularioSubacao(true)">Alterar</button>
+                        <button type="button" class="btn btn-danger" onclick="excluirSubacao()">Excluir</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ETAPA 8 - Incluir Subação/Entrega(s) -->
+    <div class="col-md-6" id="formularioSubacao" style="display: none;">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header etapa-titulo">Etapa 8 - Incluir Subação/Entrega(s)</div>
+            <div class="card-body font-sistema">
+                <form id="formSubacaoEntrega" onsubmit="return false;">
+                    <!-- ✅ Campo necessário para o JS salvar corretamente -->
+                    <input type="hidden" id="rota_inserir" value="/inserir_subacao_entrega">
+
+                    <input type="hidden" name="subacao_id" id="subacao_id">
+                    <input type="hidden" name="produto_id" value="{{ produto.id }}">
+
+                    <!-- ✅ CAMPO NOVO para enviar os municípios temporários -->
+                    <input type="hidden" name="municipios_json" id="municipios_json">
+
+                    <!-- Chave de Planejamento -->
+                    <p class="text-muted">Chave de Planejamento</p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-2">
+                                <label>Região:</label>
+                                <select name="regiao" class="form-select" required autocomplete="off"></select>
+                            </div>
+                            <div class="mb-2">
+                                <label>Subfunção + UG:</label>
+                                <select name="subfuncao_ug" class="form-select" required autocomplete="off"></select>
+                            </div>
+                            <div class="mb-2">
+                                <label>ADJ:</label>
+                                <select name="adj" class="form-select" required autocomplete="off"></select>
+                            </div>
+                            <div class="mb-2">
+                                <label>Macropolítica:</label>
+                                <select name="macropolitica" class="form-select" required autocomplete="off"></select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-2">
+                                <label>Pilar:</label>
+                                <select name="pilar" class="form-select" required autocomplete="off"></select>
+                            </div>
+                            <div class="mb-2">
+                                <label>Eixo:</label>
+                                <select name="eixo" class="form-select" required autocomplete="off"></select>
+                            </div>
+                            <div class="mb-2">
+                                <label>Política Decreto:</label>
+                                <select name="politica_decreto" class="form-select" required autocomplete="off"></select>
+                            </div>
+                            <div class="mb-2">
+                                <label>Público Transversal:</label>
+                                <select name="publico_ods" class="form-select" required autocomplete="off">
+                                    <option value="" disabled selected>Selecione</option>
+                                    <option value="I">I - Crianças</option>
+                                    <option value="II">II - Adolescentes</option>
+                                    <option value="III">III - Juventude</option>
+                                    <option value="IV">IV - Mulheres</option>
+                                    <option value="V">V - Pessoas idosas</option>
+                                    <option value="VI">VI - Pessoas com deficiência</option>
+                                    <option value="VII">VII - População em situação de rua</option>
+                                    <option value="VIII">VIII - Povos indígenas</option>
+                                    <option value="IX">IX - Comunidades tradicionais e quilombolas</option>
+                                    <option value="X">X - Negros</option>
+                                    <option value="XI">XI - Pessoas LGBTQIAPN+</option>
+                                    <option value="XII">XII - Não se aplica</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Subação/Entrega -->
+                    <p class="text-muted">Subação/Entrega</p>
+                    <div class="mb-3">
+                        <label for="subacao_entrega">Subação/Entrega:</label>
+                        <textarea id="subacao_entrega" name="subacao_entrega" class="form-control" maxlength="250" rows="4" required autocomplete="off"></textarea>
+                        <small id="contador_subacao" class="form-text text-muted">0 / 250 caracteres</small>
+                    </div>
+
+                    <div class="mb-2">
+                        <label>Produto da Subação:</label>
+                        <select name="produto_subacao" id="produto_subacao" class="form-select" required autocomplete="off">
+                            <option value="">Selecione o produto</option>
+                            <option value="0012 - Adesão realizada">0012 - Adesão realizada</option>
+                            <option value="0018 - Aluno atendido">0018 - Aluno atendido</option>
+                            <option value="0029 - Assessoramento realizado">0029 - Assessoramento realizado</option>
+                            <option value="0105 - Conselho mantido">0105 - Conselho mantido</option>
+                            <option value="0109 - Contratação realizada">0109 - Contratação realizada</option>
+                            <option value="0132 - Escola construída">0132 - Escola construída</option>
+                            <option value="0134 - Escola reformada e ampliada">0134 - Escola reformada e ampliada</option>
+                            <option value="0139 - Evento realizado">0139 - Evento realizado</option>
+                            <option value="0148 - Imóvel locado">0148 - Imóvel locado</option>
+                            <option value="0162 - Inventário realizado">0162 - Inventário realizado</option>
+                            <option value="0182 - Manutenção realizada">0182 - Manutenção realizada</option>
+                            <option value="0183 - Mão de obra credenciada">0183 - Mão de obra credenciada</option>
+                            <option value="0186 - Mapeamento elaborado">0186 - Mapeamento elaborado</option>
+                            <option value="0189 - Material adquirido">0189 - Material adquirido</option>
+                            <option value="0219 - Oficina realizada">0219 - Oficina realizada</option>
+                            <option value="0233 - Parceria firmada">0233 - Parceria firmada</option>
+                            <option value="0294 - Reunião realizada">0294 - Reunião realizada</option>
+                            <option value="0302 - Sistema desenvolvido">0302 - Sistema desenvolvido</option>
+                            <option value="0304 - Sistema implantado">0304 - Sistema implantado</option>
+                            <option value="0311 - Suporte realizado">0311 - Suporte realizado</option>
+                            <option value="0323 - Unidade aparelhada">0323 - Unidade aparelhada</option>
+                            <option value="0343 - Pagamento realizado">0343 - Pagamento realizado</option>
+                            <option value="0346 - Unidade Atendida">0346 - Unidade Atendida</option>
+                            <option value="0352 - Acervo Digitalizado">0352 - Acervo Digitalizado</option>
+                            <option value="0364 - Serviço prestado">0364 - Serviço prestado</option>
+                            <option value="0395 - Projeto Atendido">0395 - Projeto Atendido</option>
+                            <option value="0404 - Monitoramento realizado">0404 - Monitoramento realizado</option>
+                            <option value="0409 - Quadro de pessoal adequado">0409 - Quadro de pessoal adequado</option>
+                            <option value="0413 - Recolhimento realizado">0413 - Recolhimento realizado</option>
+                            <option value="0415 - Programa implantado">0415 - Programa implantado</option>
+                            <option value="0431 - Ação desenvolvida">0431 - Ação desenvolvida</option>
+                            <option value="0462 - Transferência efetuada">0462 - Transferência efetuada</option>
+                            <option value="0503 - Apoio prestado">0503 - Apoio prestado</option>
+                            <option value="0509 - Gestão de Portfólio, Programas e Projetos">0509 - Gestão de Portfólio, Programas e Projetos</option>
+                            <option value="0531 - Produto exclusivo para Emendas Parlamentares">0531 - Produto exclusivo para Emendas Parlamentares</option>
+                            <option value="0559 - Escola atendida">0559 - Escola atendida</option>
+                            <option value="0623 - Serviços de Transportes">0623 - Serviços de Transportes</option>
+                            <option value="0675 - Diárias disponibilizadas">0675 - Diárias disponibilizadas</option>
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label>Unidade Gestora:</label>
+                        <select name="unidade_gestora" class="form-select" required autocomplete="off">
+                            <option value="">Selecione a unidade gestora</option>
+                            <option value="1 - Sede">1 - Sede</option>
+                            <option value="2 - Ensino Fundamental">2 - Ensino Fundamental</option>
+                            <option value="3 - Ensino Médio">3 - Ensino Médio</option>
+                            <option value="4 - Educ. Jovens e Adult">4 - Educ. Jovens e Adult</option>
+                            <option value="5 - Educação Especial">5 - Educação Especial</option>
+                            <option value="6 - Administração Geral">6 - Administração Geral</option>
+                            <option value="7 - Transporte Escolar">7 - Transporte Escolar</option>
+                            <option value="8 - Outr Modal Ens">8 - Outr Modal Ens</option>
+                            <option value="9 - FMTE - Ensino Fundam">9 - FMTE - Ensino Fundam</option>
+                            <option value="10 - FMTE - Educação Inf.">10 - FMTE - Educação Inf.</option>
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label>Unidade Setorial de Planejamento:</label>
+                        <select name="unidade_setorial" id="unidade_setorial" class="form-select" required autocomplete="off">
+                            <option value="">Selecione a unidade</option>
+                            <option value="001 - Administração Geral">001 - Administração Geral</option>
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label>Unidade de Medida:</label>
+                        <select name="unidade_medida" id="unidade_medida" class="form-select" required autocomplete="off">
+                            <option value="">Selecione a unidade</option>
+                            <option value="Unidade">Unidade</option>
+                            <option value="Percentual">Percentual</option>
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label>Quantidade:</label>
+                        <input type="text" name="quantidade" id="quantidade" class="form-control" required autocomplete="off" placeholder="00,00">
+                    </div>
+                    <div class="mb-3">
+                        <label for="detalhamento_produto">Detalhamento e Qualificação do Produto:</label>
+                        <textarea id="detalhamento_produto" name="detalhamento_produto" class="form-control" maxlength="500" rows="4" required></textarea>
+                        <small id="contador_detalhamento" class="form-text text-muted">0 / 500 caracteres</small>
+                    </div>
+
+                    
+                    <!-- Tabela de Município(s) da Entrega -->
+                    <p class="text-muted mt-4">Município(s) da Entrega</p>
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <!-- Tabela -->
+                        <div class="table-responsive w-75 me-2">
+                            <table class="table table-bordered table-hover text-center" id="tabelaMunicipios">
+                                <thead class="table-light">
+                                    <tr class="text-nowrap">
+                                        <th>Selecionar</th>
+                                        <th>Código do Município</th>
+                                        <th>Município</th>
+                                        <th>Quantidade</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="corpoTabelaMunicipios">
+                                {% if alterar %}
+                                    {% for m in municipios %}
+                                    <tr>
+                                        <td><input type="radio" name="municipioSelecionado" value="{{ m.id }}"></td>
+                                        <td>{{ m.codigo_municipio }}</td>
+                                        <td>{{ m.nome_municipio }}</td>
+                                        <td>{{ m.quantidade }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Botões ao lado -->
+                        <div class="d-flex flex-column align-items-end" style="min-width: 120px;">
+                            <button type="button" class="btn btn-success btn-sm mb-2" onclick="abrirFormularioMunicipio()">+ Cadastrar</button>
+                            <button type="button" class="btn btn-warning btn-sm mb-2" onclick="abrirFormularioMunicipio(true)">Alterar</button>
+                            <button type="button" class="btn btn-danger btn-sm" onclick="excluirMunicipio()">Excluir</button>
+                        </div>
+                    </div>
+
+                    <!-- Responsável -->
+                    <p class="text-muted mt-4">Responsável</p>
+                    <div class="mb-3 px-2">
+                        <label>Responsável:</label>
+                        <input type="text" name="responsavel" class="form-control" required autocomplete="off">
+                    </div>
+                    <div class="mb-3 px-2">
+                        <label>CPF:</label>
+                        <input type="text" name="cpf" id="cpf" class="form-control" maxlength="14" placeholder="000.000.000-00" required autocomplete="off">
+                    </div>
+                    <div class="mb-3 px-2">
+                        <label>E-mail:</label>
+                        <input type="email" name="email" id="email" class="form-control" required autocomplete="off">
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-3 px-2">
+                        <button type="button" class="btn btn-secondary" onclick="voltarEtapa7()">Voltar</button>
+                        <button type="button" class="btn btn-padrao" onclick="salvarSubacaoEntrega()">Cadastrar</button>
+                    </div>
+
+
+<!-- Primeiro define os dados globais -->
+<script>
+    window.DADOS_PLANEJAMENTO = {
+        programa: "{{ programa.nome }}",
+        subfuncao: "{{ acao.subfuncao }}",
+        paoe: "{{ acao.acao_paoe }}",
+        produto: "{{ produto.nome }}"
+    };
+    console.log("📦 DADOS_PLANEJAMENTO:", window.DADOS_PLANEJAMENTO);
+</script>
+
+<!-- Mapeamento de Municípios por Região -->
+<script src="{{ url_for('static', filename='js/municipiosMap.js') }}"></script>
+
+<!-- Script principal -->
+<script src="{{ url_for('static', filename='js/subacao_entrega.js') }}"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Modal Município -->
+<div class="modal fade" id="modalMunicipio" tabindex="-1" aria-labelledby="modalMunicipioLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalMunicipioLabel">Cadastrar Município</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+      <div class="modal-body">
+
+        <!-- Campos ocultos essenciais -->
+        <input type="hidden" id="municipio_id" autocomplete="off">
+
+        <!-- Código do Município -->
+        <div class="mb-3">
+          <label for="codigoMunicipioSelect" class="form-label">Código do Município:</label>
+          <select id="codigoMunicipioSelect" class="form-select" onchange="atualizarNomeMunicipio()">
+            <option value="">Selecione o código</option>
+          </select>
+        </div>
+
+        <!-- Nome do Município -->
+        <div class="mb-3">
+          <label for="nomeMunicipioInput" class="form-label">Nome do Município:</label>
+          <input type="text" id="nomeMunicipioInput" class="form-control" readonly>
+        </div>
+
+        <!-- Unidade de Medida -->
+        <div class="mb-3">
+          <label for="unidadeMedidaMunicipio" class="form-label">Unidade de Medida:</label>
+          <select id="unidadeMedidaMunicipio" class="form-select">
+            <option value="">Selecione a unidade</option>
+            <option value="Unidade">Unidade</option>
+            <option value="Percentual">Percentual</option>
+          </select>
+        </div>
+
+        <!-- Quantidade -->
+        <div class="mb-3">
+          <label for="quantidade_municipio" class="form-label">Quantidade:</label>
+          <input type="text" class="form-control" id="quantidade_municipio" placeholder="00,00" autocomplete="off">
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <!-- ✅ Botão salvar configurado corretamente -->
+        <button type="button" class="btn btn-primary" onclick="salvarMunicipioTemporario()">Salvar Município</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.getElementById('formSubacaoEntrega').addEventListener('submit', function (e) {
+    const linhasTabela = document.querySelectorAll('#tabelaMunicipios tbody tr');
+    if (linhasTabela.length === 0) {
+        alert('⚠️ Você deve adicionar pelo menos um município antes de salvar a subação.');
+        e.preventDefault();
+    }
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    if (sessionStorage.getItem("reabrirModalMunicipio") === "true") {
+        sessionStorage.removeItem("reabrirModalMunicipio");
+        const modal = new bootstrap.Modal(document.getElementById("modalMunicipio"));
+        modal.show();
+    }
+});
+</script>
+
+{% if mensagem_popup %}
+<script>
+    sessionStorage.setItem("mensagem_popup", "{{ mensagem_popup }}");
+</script>
+{% endif %}
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const mensagem = sessionStorage.getItem("mensagem_popup");
+    if (mensagem) {
+        alert(mensagem);
+        sessionStorage.removeItem("mensagem_popup");
+    }
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,179 @@
+/* =================== */
+/* GERAL               */
+/* =================== */
+body {
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    background-color: #f9f9f9;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h2 {
+    color: #003B46;
+}
+
+.text-muted {
+    color: #888 !important;
+}
+
+img {
+    margin-top: 0px;
+    margin-left: 2px;
+}
+
+
+/* =================== */
+/* LOGO LATERAL        */
+/* =================== */
+.logo-container {
+    background-color: rgba(255, 255, 255, 0);
+    padding: 1px;
+}
+
+.logo-topo {
+    height: 95px;          /* define a altura desejada */
+    width: auto;            /* mantém a proporção da imagem */
+    object-fit: contain;    /* evita distorções */
+    display: block;
+}
+
+/* =================== */
+/* NAVBAR / MENU       */
+/* =================== */
+.navbar {
+    background-color: #005f5f !important;
+    border-bottom: 2px solid #004f4f;
+}
+
+.navbar .navbar-brand,
+.navbar .nav-link {
+    color: #ffffff !important;
+}
+
+.navbar .nav-link:hover {
+    color: #C4DFE6 !important; /* tom claro complementar */
+}
+
+
+/* =================== */
+/* FAIXA INSTITUCIONAL */
+/* =================== */
+.institucional-bar {
+    background-color: #3c7e7e; /* tom mais claro que #005f5f */
+    padding: 8px 0;
+    font-weight: bold;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: white;
+    text-align: center;
+}
+
+/* ============================= */
+/* ESTILO PADRÃO DO SISTEMA PTA */
+/* ============================= */
+
+/* Título das etapas (ETAPA 1, ETAPA 2 etc.) */
+.etapa-titulo {
+    background-color: #005f5f;
+    color: white;
+    font-weight: bold;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-top-left-radius: 0.375rem;
+    border-top-right-radius: 0.375rem;
+}
+
+/* Botão padrão do sistema (Cadastrar, Confirmar etc.) */
+.btn-padrao {
+    background-color: #005f5f;
+    color: white;
+    border: none;
+}
+
+.btn-padrao:hover {
+    background-color: #3c7e7e;
+    color: #fff;
+}
+
+/* Botão Voltar */
+.btn-secondary {
+    background-color: #6c757d;
+    border: none;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+/* Botão Excluir (mantendo o padrão Bootstrap vermelho) */
+.btn-danger {
+    background-color: #dc3545;
+    border: none;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+/* Botão Alterar (usando amarelo mais discreto) */
+.btn-warning {
+    background-color: #ffc107;
+    border: none;
+    color: #212529;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+}
+
+/* Ajuste de espaçamento geral */
+.table th, .table td {
+    vertical-align: middle !important;
+}
+
+/* Estilo visual para a opção 'Selecione um item' */
+.placeholder-option {
+    color: #888;  /* cinza claro */
+}
+
+select:invalid {
+    border: 2px solid #ff9393;
+}
+
+/* ===================== */
+/* FONTE PADRÃO DO SISTEMA */
+/* ===================== */
+.font-sistema {
+    font-size: 14px;
+}
+
+/* Para os inputs e selects do formulário */
+.form-control,
+.form-select {
+    font-size: 14px;
+}
+
+/* Para os labels dos formulários */
+label {
+    font-size: 13.5px;
+    font-weight: 500;
+}
+
+/* Para o texto da tabela */
+.table th,
+.table td {
+    font-size: 12px;
+}
+
+/* === Botões pequenos e laterais da tabela de municípios === */
+.btn-municipio {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    margin-bottom: 5px;
+    width: 100%;
+    white-space: nowrap;
+    text-align: center;
+    border-radius: 0.4rem;
+}
