@@ -48,16 +48,19 @@
                 </div>
 
                 <!-- Botões -->
-                <div class="d-flex justify-content-between">
-                    <div>
-                    <a href="{{ url_for('acoes_por_programa', programa_id=programa.id) }}" class="btn btn-secondary">Voltar</a>
-                    <button type="button" class="btn btn-success me-2" onclick="abrirFormularioProduto()">+ Cadastrar</button>
-                    <button type="button" class="btn btn-warning me-2" onclick="abrirFormularioProduto(true)">Alterar</button>
-                    <button type="button" class="btn btn-danger me-2" onclick="excluirProduto()">Excluir</button>
-                    </div>
-                    <div>
-                        <a href="#" id="botaoSubacaoEntrega" class="btn btn-padrao">Subação/Entrega</a>
-                    </div>
+                <style>
+                    .btn-reduzido {
+                        padding: 6px 10px;
+                        font-size: 0.85rem;
+                    }
+                </style>
+
+                <div class="d-flex justify-content-center gap-2 flex-nowrap">
+                    <a href="{{ url_for('acoes_por_programa', programa_id=programa.id) }}" class="btn btn-secondary btn-reduzido">Voltar</a>
+                    <button type="button" class="btn btn-success btn-reduzido" onclick="abrirFormularioProduto()">+ Cadastrar</button>
+                    <button type="button" class="btn btn-warning btn-reduzido" onclick="abrirFormularioProduto(true)">Alterar</button>
+                    <button type="button" class="btn btn-danger btn-reduzido" onclick="excluirProduto()">Excluir</button>
+                    <a href="#" id="botaoSubacaoEntrega" class="btn btn-padrao btn-reduzido">Subação/Entrega</a>
                 </div>
             </div>
         </div>
@@ -138,4 +141,40 @@
         }
     });
 </script>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <script>
+        sessionStorage.setItem("mensagemCategoria", "{{ category }}");
+        sessionStorage.setItem("mensagemTexto", "{{ message }}");
+      </script>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<!-- SweetAlert2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const categoria = sessionStorage.getItem("mensagemCategoria");
+    const texto = sessionStorage.getItem("mensagemTexto");
+
+    if (categoria && texto) {
+      Swal.fire({
+        icon: categoria === "success" ? "success" :
+              categoria === "danger" ? "error" :
+              categoria === "warning" ? "warning" : "info",
+        title: texto,
+        confirmButtonColor: '#005f5f'
+      });
+
+      // Limpar após exibir
+      sessionStorage.removeItem("mensagemCategoria");
+      sessionStorage.removeItem("mensagemTexto");
+    }
+  });
+</script>
+
 {% endblock %}

@@ -3,9 +3,291 @@
 {% block title %}Página Inicial - PTA 2026{% endblock %}
 
 {% block content %}
-    <div class="text-center">
-        <h2>Bem-vindo ao Sistema do Plano de Trabalho Anual - PTA 2026</h2>
-        <p class="text-muted">Página em construção...</p>
-        <img src="{{ url_for('static', filename='img/em_construcao.jpg') }}" alt="Página em Construção" class="img-fluid" style="max-width: 400px;">
+<div class="text-center">
+    <h2>Bem-vindo ao Sistema do Plano de Trabalho Anual</h2>
+</div>
+
+<div class="container mt-4">
+
+    <!-- Bloco inicial: descrição do sistema e painel -->
+    <div class="row">
+        <!-- Bloco 1: Descrição do sistema -->
+        <div class="col-12 mb-4">
+            <div class="noticia-box min-altura">
+                <h5><strong>O sistema PTA (Plano de Trabalho Anual)</strong></h5>
+                <small class="text-muted">NGER</small>
+                <p>
+                    O sistema PTA (Plano de Trabalho Anual) é uma ferramenta desenvolvida para apoiar as equipes do Núcleo de Gestão Estratégica para Resultados - NGER, vinculado à Secretaria de Estado de Educação, na elaboração, organização e acompanhamento do Plano de Trabalho Anual. Seu objetivo é garantir maior eficiência, padronização e controle sobre as etapas de planejamento institucional, permitindo que as ações estratégicas da Secretaria sejam planejadas, cadastradas, gerenciadas e auditadas de forma estruturada, transparente e alinhada às diretrizes governamentais.
+                </p>
+            </div>
+        </div>
+
+        <!-- Bloco 2: Painel de Acompanhamento do PTA -->
+        <div class="col-12 mb-4">
+            <div class="noticia-box min-altura">
+                <h5><strong>Painel de Acompanhamento do PTA</strong></h5>
+                <small class="text-muted">Atualizado em tempo real</small>
+
+                <!-- Alerta destacado -->
+                <div id="alerta-sem-etapa" class="mt-3 mb-2 text-danger fw-bold"></div>
+
+                <!-- Grade em duas colunas -->
+                <div class="row" id="painel-contagem">
+                    <!-- Conteúdo será preenchido via JS -->
+                </div>
+            </div>
+        </div>
     </div>
+
+    <!-- Linha 1 -->
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="noticia-box">
+                <h5><strong>Plano Plurianual - PPA</strong></h5>
+                <small class="text-muted">Plano Plurianual - PPA 2024-2027</small>
+                <p>Disponível em 
+                    <a href="https://drive.google.com/file/d/1d6gelgl1S732s4U1g0bSrbrpR5Od2_gS/view?pli=1" target="_blank" rel="noopener noreferrer">
+                        Plano Plurianual - PPA
+                    </a>
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="noticia-box">
+                <h5><strong>MTPO-2025</strong></h5>
+                <small class="text-muted">Manual Técnico de Planejamento e Orçamento</small>
+                <p>Disponível em 
+                    <a href="https://seplag.mt.gov.br/images/files/responsive/Planejamento/2025/PTA_2025/MTPO_2025.pdf" target="_blank" rel="noopener noreferrer">
+                        MTPO-2025
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Linha 2 -->
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="noticia-box">
+                <h5><strong>Lei de Diretrizes Orçamentárias (LDO)</strong></h5>
+                <small class="text-muted">Projeto de Lei de Diretrizes Orçamentárias (PLDO) de 2026</small>
+                <p>Disponível em 
+                    <a href="https://www5.sefaz.mt.gov.br/orcamento?c=11387798&e=72706241" target="_blank" rel="noopener noreferrer">
+                        LDO 2026
+                    </a>
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="noticia-box">
+                <h5><strong>Audiências Públicas</strong></h5>
+                <small class="text-muted">Consultas e Audiências Públicas</small>
+                <p>Disponível em 
+                    <a href="https://www5.sefaz.mt.gov.br/orcamento?c=16582978&e=16590508" target="_blank" rel="noopener noreferrer">
+                        Audiências Públicas
+                    </a>
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="noticia-box">
+                <h5><strong>SEDUC - Modelo de Negócio e Matriz SWOT</strong></h5>
+                <small class="text-muted">Versão 2023</small>
+                <p>Disponível em 
+                    <a href="https://drive.google.com/drive/folders/1yso8e02NjzKCniPDI1O2glGBY85EWh-S?usp=sharing" target="_blank" rel="noopener noreferrer">
+                        Drive Material
+                    </a>
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="noticia-box">
+                <h5><strong>Plano Estadual de Educação - PEE</strong></h5>
+                <small class="text-muted">LEI Nº 11.422, DE 14 DE JUNHO DE 2021- D.O.14.06.21- EDIÇÃO EXTRA</small>
+                <p>Disponível em 
+                    <a href="https://leisestaduais.com.br/mt/lei-ordinaria-n-11422-2021-mato-grosso-aprova-o-plano-estadual-de-educacao-pee-e-da-outras-providencias" target="_blank" rel="noopener noreferrer">
+                        Plano Estadual de Educação - PEE
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Linha 3 -->
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="noticia-box">
+                <h5><strong>SEPLAG-MT</strong></h5>
+                <small class="text-muted">Portal de Planejamento</small>
+                <p>Disponível em 
+                    <a href="https://seplag.mt.gov.br/index.php?pg=categorias&c=108" target="_blank" rel="noopener noreferrer">
+                        SEPLAG-MT
+                    </a>
+                </p>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="noticia-box">
+                <h5><strong>FIPLAN</strong></h5>
+                <small class="text-muted">Sistema integrado de Planejamento, Contabilidade e Finanças do Estado-MT</small>
+                <p>Disponível em 
+                    <a href="https://www.fiplan.mt.gov.br/Fiplan.jsp" target="_blank" rel="noopener noreferrer">
+                        FIPLAN-MT
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+        <!-- Linha 1: Decreto e Lei Ordinária lado a lado -->
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="noticia-box">
+                    <h5><strong>Decreto Nº 1.497, de 10 de outubro de 2022</strong></h5>
+                    <small class="text-muted">(Data de publicação no sistema: 13 de outubro de 2022)</small>
+                    <p>
+                        Dispõe sobre o Programa EducAção - 10 Anos, no âmbito do Estado de Mato Grosso, disponível em 
+                        <a href="https://leisestaduais.com.br/mt/decreto-n-1497-2022-mato-grosso-dispoe-sobre-a-programa-educacao-10-anos-no-ambito-do-estado-de-mato-grosso?q=1988" target="_blank" rel="noopener noreferrer">
+                            Decreto Nº 1.497, de 10 de outubro de 2022
+                        </a>
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+                <div class="noticia-box">
+                    <h5><strong>Lei Ordinária Nº 12431, de 5 de fevereiro de 2024</strong></h5>
+                    <small class="text-muted">(Publicada em 26 de agosto de 2024)</small>
+                    <p>
+                        Dispõe sobre a criação do FMTE no Estado de MT, disponível em 
+                        <a href="https://leisestaduais.com.br/mt/lei-ordinaria-n-12431-2024-mato-grosso-dispoe-sobre-a-criacao-do-fundo-estadual-de-apoio-a-melhoria-das-condicoes-de-oferta-da-educacao-infantil-e-do-ensino-fundamental-no-estado-de-mato-grosso-fmte-e-da-outras-providencias" target="_blank" rel="noopener noreferrer">
+                            Lei Ordinária Nº 12431
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Linha 2: Portarias -->
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="noticia-box">
+                    <h5><strong>Portaria Nº 42, De 14 De Abril De 1999</strong></h5>
+                    <small class="text-muted">(Publicada no D.O.U. de 15.04.99)</small>
+                    <p>
+                        Atualiza a discriminação da despesa por funções [...] disponível em 
+                        <a href="http://www.orcamentofederal.gov.br/orcamentos-anuais/orcamento-1999/Portaria_Ministerial_42_de_140499.pdf/" target="_blank" rel="noopener noreferrer">
+                            Portaria Nº 42
+                        </a>
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+                <div class="noticia-box">
+                    <h5><strong>Portaria Interministerial Nº 163, de 4 de maio de 2001</strong></h5>
+                    <small class="text-muted">(D.O.U. nº 87-E, 07.05.2001)</small>
+                    <p>
+                        Dispõe sobre normas gerais de consolidação das Contas Públicas [...] disponível em 
+                        <a href="http://www.orcamentofederal.gov.br/orcamentos-anuais/orcamento-2015-2/arquivos%20portarias-sof/portaria-interm-163_2001_atualizada_2015_02set2015.pdf/" target="_blank" rel="noopener noreferrer">
+                            Portaria Interministerial Nº 163
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Linha 3: Dados MT -->
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="noticia-box">
+                    <h5><strong>DADOS MT</strong></h5>
+                    <small class="text-muted">DADOSMT.gov.br</small>
+                    <p>
+                        Iniciativa da SEPLAG-MT disponível em 
+                        <a href="https://dados.seplag.mt.gov.br/" target="_blank" rel="noopener noreferrer">
+                            DADOS MT
+                        </a>
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="noticia-box">
+                    <h5><strong>Painel SAAS</strong></h5>
+                    <small class="text-muted">Execução Orçamentária</small>
+                    <p>Disponível em 
+                        <a href="https://app.powerbi.com/view?r=eyJrIjoiNTkzY2ViMjQtYjAxOC00N2Y5LThkMDMtYzU3ZWQ2ZGRmOTI2IiwidCI6IjRiODE2MzM4LWYxYmYtNDhlMC1hYWVhLTc4YTZiN2I4ZjRiOSJ9" target="_blank" rel="noopener noreferrer">
+                            Painel SAAS
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+</div> <!-- Fecha container -->
+
+<!-- Script painel -->
+<script>
+function carregarPainelContagem() {
+    console.log('carregando painel');
+
+    fetch('/dashboard_status')
+        .then(res => res.json())
+        .then(data => {
+            const alertaDiv = document.getElementById('alerta-sem-etapa');
+            if (data.subacoes_sem_etapa > 0) {
+                let detalhes = '';
+                if (data.subacoes_sem_etapa_detalhes && data.subacoes_sem_etapa_detalhes.length > 0) {
+                    detalhes = '<ul class="mt-2 ps-3">';
+                    data.subacoes_sem_etapa_detalhes.forEach((item, index) => {
+                        detalhes += `
+                            <li>
+                                <strong>Programa:</strong> ${item.programa} |
+                                <strong>Ação/PAOE:</strong> ${item.acao} |
+                                <strong>Produto:</strong> ${item.produto} |
+                                <strong>Subação:</strong> ${item.subacao}
+                            </li>`;
+                        // Adiciona <hr> se não for o último item
+                        if (index < data.subacoes_sem_etapa_detalhes.length - 1) {
+                            detalhes += `<hr style="border: none; border-top: 2px solid rgba(220, 53, 69, 0.25); margin: 4px 0;">`;
+                        }
+                    });
+                    detalhes += '</ul>';
+                }
+
+                alertaDiv.innerHTML = `
+                    <div class="text-danger fw-bold mb-2">
+                        ⚠ ${data.subacoes_sem_etapa} Subação(ões) sem Etapa vinculada!
+                    </div>
+                    <hr style="border: none; border-top: 2px solid rgba(220, 53, 69, 0.25); margin: 8px 0;">
+                    ${detalhes}
+                `;
+            } else {
+                alertaDiv.innerHTML = '';
+            }
+
+            const painel = document.getElementById('painel-contagem');
+            painel.innerHTML = `
+                <div class="col-md-6 mb-2">• Programas: <strong>${data.programas}</strong></div>
+                <div class="col-md-6 mb-2">• Ações/PAOEs: <strong>${data.acoes}</strong></div>
+                <div class="col-md-6 mb-2">• Produtos da Ação: <strong>${data.produtos}</strong></div>
+                <div class="col-md-6 mb-2">• Subações/Entregas: <strong>${data.subacoes}</strong></div>
+                <div class="col-md-6 mb-2">• Etapas planejadas: <strong>${data.etapas}</strong></div>
+                <div class="col-md-6 mb-2">• Memórias de cálculo: <strong>${data.memorias}</strong></div>
+            `;
+        })
+        .catch(err => console.error('Erro ao carregar painel:', err));
+}
+
+document.addEventListener('DOMContentLoaded', carregarPainelContagem);
+
+</script>
+
+
+
 {% endblock %}

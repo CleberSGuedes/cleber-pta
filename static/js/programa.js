@@ -87,7 +87,7 @@ function fecharFormulario() {
     if (selecionado) selecionado.checked = false;
 }
 
-// === Excluir programa ===
+// === Excluir programa com aviso ===
 function excluirPrograma() {
     const selecionado = document.querySelector('input[name="programaSelecionado"]:checked');
     if (!selecionado) {
@@ -95,14 +95,19 @@ function excluirPrograma() {
         return;
     }
 
+    const programaId = selecionado.value;
+
+    // Confirmação do usuário
     if (confirm("Deseja realmente excluir este programa?")) {
+        // Envia o formulário normalmente, a verificação será feita no backend
         const form = document.createElement('form');
         form.method = 'POST';
-        form.action = `/excluir_programa/${selecionado.value}`;
+        form.action = `/excluir_programa/${programaId}`;
         document.body.appendChild(form);
         form.submit();
     }
 }
+
 
 // === Redirecionar para Etapa 3 (Ação/PAOE) ===
 function mostrarEtapa3() {

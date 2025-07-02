@@ -19,7 +19,7 @@
     <!-- ETAPA 7 - Cadastrar Subação/Entrega -->
     <div class="col-md-6">
         <div class="card shadow-sm mb-4">
-            <div class="card-header etapa-titulo">Etapa 7 - Cadastrar Subação/Entrega(s)</div>
+            <div class="card-header etapa-titulo">Cadastrar Subação/Entrega(s)</div>
             <div class="card-body font-sistema">
                 <p><strong>Programa Governo:</strong> {{ programa.nome }}</p>
                 <p><strong>Função:</strong> {{ programa.funcao }}</p>
@@ -67,13 +67,19 @@
                     </form>
                 </div>
 
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <a href="{{ url_for('cadastrar_produto_acao', programa_id=programa.id, acao_id=acao.id) }}" class="btn btn-secondary">Voltar</a>
-                        <button type="button" class="btn btn-success me-2" onclick="abrirFormularioSubacao()">+ Cadastrar</button>
-                        <button type="button" class="btn btn-warning me-2" onclick="abrirFormularioSubacao(true)">Alterar</button>
-                        <button type="button" class="btn btn-danger" onclick="excluirSubacao()">Excluir</button>
-                    </div>
+                <style>
+                    .btn-reduzido {
+                        padding: 6px 10px;
+                        font-size: 0.85rem;
+                    }
+                </style>
+
+                <div class="d-flex justify-content-center gap-2 flex-nowrap">
+                    <a href="{{ url_for('cadastrar_produto_acao', programa_id=programa.id, acao_id=acao.id) }}" class="btn btn-secondary btn-reduzido">Voltar</a>
+                    <button type="button" class="btn btn-success btn-reduzido" onclick="abrirFormularioSubacao()">+ Cadastrar</button>
+                    <button type="button" class="btn btn-warning btn-reduzido" onclick="abrirFormularioSubacao(true)">Alterar</button>
+                    <button type="button" class="btn btn-danger btn-reduzido" onclick="excluirSubacao()">Excluir</button>
+                    <a href="#" id="botaoEtapa" class="btn btn-padrao btn-reduzido">Etapa</a>
                 </div>
             </div>
         </div>
@@ -82,7 +88,7 @@
     <!-- ETAPA 8 - Incluir Subação/Entrega(s) -->
     <div class="col-md-6" id="formularioSubacao" style="display: none;">
         <div class="card shadow-sm mb-4">
-            <div class="card-header etapa-titulo">Etapa 8 - Incluir Subação/Entrega(s)</div>
+            <div class="card-header etapa-titulo">Incluir Subação/Entrega(s)</div>
             <div class="card-body font-sistema">
                 <form id="formSubacaoEntrega" onsubmit="return false;">
                     <!-- ✅ Campo necessário para o JS salvar corretamente -->
@@ -99,37 +105,37 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-2">
-                                <label>Região:</label>
+                                <label>1 - Região:</label>
                                 <select name="regiao" class="form-select" required autocomplete="off"></select>
                             </div>
                             <div class="mb-2">
-                                <label>Subfunção + UG:</label>
+                                <label>2 - Subfunção + UG:</label>
                                 <select name="subfuncao_ug" class="form-select" required autocomplete="off"></select>
                             </div>
                             <div class="mb-2">
-                                <label>ADJ:</label>
+                                <label>3 - ADJ:</label>
                                 <select name="adj" class="form-select" required autocomplete="off"></select>
                             </div>
                             <div class="mb-2">
-                                <label>Macropolítica:</label>
+                                <label>4 - Macropolítica:</label>
                                 <select name="macropolitica" class="form-select" required autocomplete="off"></select>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-2">
-                                <label>Pilar:</label>
+                                <label>5 - Pilar:</label>
                                 <select name="pilar" class="form-select" required autocomplete="off"></select>
                             </div>
                             <div class="mb-2">
-                                <label>Eixo:</label>
+                                <label>6 - Eixo:</label>
                                 <select name="eixo" class="form-select" required autocomplete="off"></select>
                             </div>
                             <div class="mb-2">
-                                <label>Política Decreto:</label>
+                                <label>7 - Política Decreto:</label>
                                 <select name="politica_decreto" class="form-select" required autocomplete="off"></select>
                             </div>
                             <div class="mb-2">
-                                <label>Público Transversal:</label>
+                                <label>8 - Público Transversal:</label>
                                 <select name="publico_ods" class="form-select" required autocomplete="off">
                                     <option value="" disabled selected>Selecione</option>
                                     <option value="I">I - Crianças</option>
@@ -220,7 +226,6 @@
                     <div class="mb-2">
                         <label>Unidade Setorial de Planejamento:</label>
                         <select name="unidade_setorial" id="unidade_setorial" class="form-select" required autocomplete="off">
-                            <option value="">Selecione a unidade</option>
                             <option value="001 - Administração Geral">001 - Administração Geral</option>
                         </select>
                     </div>
@@ -238,16 +243,16 @@
                     </div>
                     <div class="mb-3">
                         <label for="detalhamento_produto">Detalhamento e Qualificação do Produto:</label>
-                        <textarea id="detalhamento_produto" name="detalhamento_produto" class="form-control" maxlength="500" rows="4" required></textarea>
+                        <textarea id="detalhamento_produto" name="detalhamento" class="form-control" maxlength="500" rows="4" required></textarea>
                         <small id="contador_detalhamento" class="form-text text-muted">0 / 500 caracteres</small>
                     </div>
 
                     
-                    <!-- Tabela de Município(s) da Entrega -->
-                    <p class="text-muted mt-4">Município(s) da Entrega</p>
-                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <!-- Tabela de Município(s) da Entrega -->
+                        <p class="text-muted mt-4">Município(s) da Entrega</p>
+                        <div class="d-flex justify-content-between align-items-start mb-3">
                         <!-- Tabela -->
-                        <div class="table-responsive w-75 me-2">
+                        <div class="table-responsive w-75 me-3">
                             <table class="table table-bordered table-hover text-center" id="tabelaMunicipios">
                                 <thead class="table-light">
                                     <tr class="text-nowrap">
@@ -258,21 +263,12 @@
                                     </tr>
                                 </thead>
                                 <tbody id="corpoTabelaMunicipios">
-                                {% if alterar %}
-                                    {% for m in municipios %}
-                                    <tr>
-                                        <td><input type="radio" name="municipioSelecionado" value="{{ m.id }}"></td>
-                                        <td>{{ m.codigo_municipio }}</td>
-                                        <td>{{ m.nome_municipio }}</td>
-                                        <td>{{ m.quantidade }}</td>
-                                    </tr>
-                                    {% endfor %}
-                                {% endif %}
+                                    <!-- Linhas preenchidas dinamicamente via JavaScript -->
                                 </tbody>
                             </table>
                         </div>
 
-                        <!-- Botões ao lado -->
+                        <!-- Botões fixos ao lado -->
                         <div class="d-flex flex-column align-items-end" style="min-width: 120px;">
                             <button type="button" class="btn btn-success btn-sm mb-2" onclick="abrirFormularioMunicipio()">+ Cadastrar</button>
                             <button type="button" class="btn btn-warning btn-sm mb-2" onclick="abrirFormularioMunicipio(true)">Alterar</button>
@@ -408,6 +404,25 @@ document.addEventListener("DOMContentLoaded", function () {
         sessionStorage.removeItem("mensagem_popup");
     }
 });
+</script>
+
+<!-- Script de redirecionamento para Etapa -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const botao = document.getElementById("botaoEtapa");
+        if (botao) {
+            botao.addEventListener("click", () => {
+                const selecionado = document.querySelector('input[name="subacaoSelecionada"]:checked');
+                if (!selecionado) {
+                    alert("Selecione uma Subações/Entregas para acessar as Etapas.");
+                    return;
+                }
+                const subacaoId = selecionado.value;
+                const url = `/etapas/{{ programa.id }}/{{ acao.id }}/{{ produto.id }}/${subacaoId}`;
+                window.location.href = url;
+            });
+        }
+    });
 </script>
 
 {% endblock %}

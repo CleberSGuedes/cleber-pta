@@ -4195,7 +4195,6 @@ window.abrirFormularioSubacao = function (alterar = false) {
 
     const container = document.getElementById("formularioSubacao");
 
-    // Verifica se elementos obrigatórios existem
     const camposObrigatorios = [
         "subacao_entrega", "produto_subacao", "unidade_setorial",
         "quantidade", "detalhamento_produto", "cpf", "email"
@@ -4208,14 +4207,11 @@ window.abrirFormularioSubacao = function (alterar = false) {
         return;
     }
 
-    // Exibe o formulário
-    container.style.display = "block";
-
-    // Se for modo de alteração, busca subação selecionada
     if (alterar) {
         const selecionado = document.querySelector('input[name="subacaoSelecionada"]:checked');
         if (!selecionado) {
             alert("⚠️ Por favor, selecione uma Subação/Entrega para alterar.");
+            location.reload(); // recarrega antes que o form seja exibido
             return;
         }
 
@@ -4228,45 +4224,58 @@ window.abrirFormularioSubacao = function (alterar = false) {
                     return;
                 }
 
-                // Preenche os campos
+                // Preenche campos do formulário
                 document.getElementById("subacao_id").value = data.id || "";
                 document.getElementById("subacao_entrega").value = data.subacao_entrega_raw || "";
                 document.getElementById("produto_subacao").value = data.produto_subacao || "";
                 document.querySelector('select[name="unidade_gestora"]').value = data.unidade_gestora || "";
                 document.getElementById("unidade_setorial").value = data.unidade_setorial || "";
-                document.getElementById("un_medida").value = data.un_medida || "";
+                document.getElementById("unidade_medida").value = data.un_medida || "";
                 document.getElementById("quantidade").value = data.quantidade || "";
-                document.getElementById("detalhamento_produto").value = data.detalhamento || "";
+                document.querySelector('textarea[name="detalhamento"]').value = data.detalhamento || "";
                 document.querySelector('input[name="responsavel"]').value = data.responsavel || "";
                 document.getElementById("cpf").value = data.cpf || "";
                 document.getElementById("email").value = data.email || "";
 
-                // Campos encadeados (região etc.)
+                // Preenche campos diretos (não encadeados)
                 document.querySelector('select[name="regiao"]').value = data.regiao || "";
                 document.querySelector('select[name="subfuncao_ug"]').value = data.subfuncao_ug || "";
-                document.querySelector('select[name="adj"]').value = data.adj || "";
-                document.querySelector('select[name="macropolitica"]').value = data.macropolitica || "";
-                document.querySelector('select[name="pilar"]').value = data.pilar || "";
-                document.querySelector('select[name="eixo"]').value = data.eixo || "";
-                document.querySelector('select[name="politica_decreto"]').value = data.politica_decreto || "";
                 document.querySelector('select[name="publico_ods"]').value = data.publico_ods || "";
 
-                // Atualiza municípios temporários
-                if (data.municipios && Array.isArray(data.municipios)) {
-                    window.municipiosTemp = data.municipios;
-                    atualizarTabelaMunicipios();  // ✅ importante
-                }
+                // Atualiza DADOS_PLANEJAMENTO para prevenir sobrescrita
+                window.DADOS_PLANEJAMENTO = {
+                    programa: data.programa || "",
+                    subfuncao: data.subfuncao || "",
+                    paoe: data.paoe || "",
+                    produto: data.produto_subacao || ""
+                };
+
+                // Atualiza municípios
+                window.municipiosTemp = Array.isArray(data.municipios) ? data.municipios : [];
+                atualizarTabelaMunicipios();
+
+                // ✅ Preencher campos encadeados com segurança
+                setTimeout(() => {
+                    preencherCamposEncadeadosDiretamente(data);
+                }, 300);
+
+                // Exibe o formulário
+                container.style.display = "block";
             })
             .catch(erro => {
                 console.error("❌ Erro ao carregar subação:", erro);
                 alert("Erro ao buscar os dados da subação.");
             });
+
     } else {
-        // Resetar o formulário para novo cadastro
+        // Novo cadastro
         document.getElementById("formSubacaoEntrega").reset();
         document.getElementById("subacao_id").value = "";
         window.municipiosTemp = [];
         atualizarTabelaMunicipios();
+
+        // Exibe o formulário
+        container.style.display = "block";
     }
 };
 
@@ -4427,22 +4436,25 @@ function abrirFormularioMunicipio(alterar = false) {
 
   const modal = new bootstrap.Modal(document.getElementById("modalMunicipio"));
   modal.show();
-  console.log("🪟 Modal aberto");
 
   const codigoSelect = document.getElementById("codigoMunicipioSelect");
   const nomeInput = document.getElementById("nomeMunicipioInput");
+  const unidadeMedidaInput = document.getElementById("unidadeMedidaMunicipio");
+  const quantidadeInput = document.getElementById("quantidade_municipio");
 
   if (!codigoSelect || !nomeInput) {
-    console.error("❌ Campos 'codigoMunicipioSelect' ou 'nomeMunicipioInput' não encontrados no DOM.");
+    console.error("❌ Campos 'codigoMunicipioSelect' ou 'nomeMunicipioInput' não encontrados.");
     return;
   }
 
   // Limpa campos
   codigoSelect.innerHTML = '<option value="">Selecione o código</option>';
   nomeInput.value = "";
+  unidadeMedidaInput.value = "";
+  quantidadeInput.value = "";
+  document.getElementById("municipio_id").value = "";
 
   const municipios = regioesMunicipios[regiaoAtual];
-  console.log("📦 Municípios da região:", municipios);
 
   if (municipios && typeof municipios === "object") {
     for (const codigo in municipios) {
@@ -4451,11 +4463,33 @@ function abrirFormularioMunicipio(alterar = false) {
       option.value = codigo;
       option.textContent = `${codigo} - ${nome}`;
       codigoSelect.appendChild(option);
-
-      console.log(`➕ Adicionado: ${option.textContent}`);
     }
-  } else {
-    console.warn(`⚠️ Nenhum município encontrado para a Região: ${regiaoAtual}`);
+  }
+
+  // 🔄 MODO ALTERAR
+  if (alterar) {
+    const selecionado = document.querySelector('input[name="municipioSelecionado"]:checked');
+    if (!selecionado) {
+      alert("Por favor, selecione um município da tabela para alterar.");
+      return;
+    }
+
+    const id = selecionado.value;
+    const linha = selecionado.closest("tr");
+    const codigo = linha.children[1].textContent.trim();
+    const nome = linha.children[2].textContent.trim();
+    const quantidade = linha.children[3].textContent.trim();
+
+    document.getElementById("municipio_id").value = id;
+    document.getElementById("codigoMunicipioSelect").value = codigo;
+    document.getElementById("nomeMunicipioInput").value = nome;
+    document.getElementById("quantidade_municipio").value = quantidade;
+
+    // Tenta detectar unidade de medida
+    const municipio = municipiosTemp.find(m => m.codigo == codigo);
+    if (municipio) {
+      document.getElementById("unidadeMedidaMunicipio").value = municipio.un_medida || "";
+    }
   }
 }
 
@@ -4552,13 +4586,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 200);
   }
 
-  sessionStorage.removeItem("modoAlteracao"); // 🔄 limpa o modo após carregar
+  sessionStorage.removeItem("modoAlteracao");
 
   const subfuncaoUGSelect = document.querySelector('select[name="subfuncao_ug"]');
   const unidadeGestoraSelect = document.querySelector('select[name="unidade_gestora"]');
 
   if (subfuncaoUGSelect) {
     subfuncaoUGSelect.addEventListener("change", () => {
+      if (isModoAlteracao) return;
+
       const novoUG = subfuncaoUGSelect.value.split(".")[1]?.trim();
       console.log("📢 Subfunção + UG alterada → nova UG:", novoUG);
 
@@ -4586,6 +4622,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   document.querySelector('select[name="adj"]')?.addEventListener("change", () => {
+    if (isModoAlteracao) return;
+
     const adjSelecionado = document.querySelector('select[name="adj"]')?.value?.trim();
     document.querySelector('select[name="pilar"]').innerHTML = '<option value="">Selecione</option>';
     document.querySelector('select[name="eixo"]').innerHTML = '<option value="">Selecione</option>';
@@ -4597,6 +4635,8 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.querySelector('select[name="macropolitica"]')?.addEventListener("change", () => {
+    if (isModoAlteracao) return;
+
     const adjSelecionado = document.querySelector('select[name="adj"]')?.value?.trim();
     const macroSelecionado = document.querySelector('select[name="macropolitica"]')?.value?.trim();
     document.querySelector('select[name="eixo"]').innerHTML = '<option value="">Selecione</option>';
@@ -4608,6 +4648,8 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.querySelector('select[name="pilar"]')?.addEventListener("change", () => {
+    if (isModoAlteracao) return;
+
     const adjSelecionado = document.querySelector('select[name="adj"]')?.value?.trim();
     const macroSelecionada = document.querySelector('select[name="macropolitica"]')?.value?.trim();
     const pilarSelecionado = document.querySelector('select[name="pilar"]')?.value?.trim();
@@ -4620,6 +4662,8 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.querySelector('select[name="eixo"]')?.addEventListener("change", () => {
+    if (isModoAlteracao) return;
+
     const adjSel = document.querySelector('select[name="adj"]')?.value?.trim();
     const macroSel = document.querySelector('select[name="macropolitica"]')?.value?.trim();
     const pilarSel = document.querySelector('select[name="pilar"]')?.value?.trim();
@@ -4675,12 +4719,6 @@ window.abrirFormularioMunicipio = function (alterar = false) {
         return;
     }
 
-    // ⚠️ Só limpa o subacao_id se NÃO estiver em modo alteração
-    if (!alterar) {
-        const campoSubacao = document.getElementById("subacao_id");
-        if (campoSubacao) campoSubacao.value = "";
-    }
-
     const selectCodigo = document.getElementById("codigoMunicipioSelect");
     const inputNome = document.getElementById("nomeMunicipioInput");
     const inputId = document.getElementById("municipio_id");
@@ -4699,6 +4737,7 @@ window.abrirFormularioMunicipio = function (alterar = false) {
             opt.textContent = `${codigo} - ${nome}`;
             selectCodigo.appendChild(opt);
         });
+
         selectCodigo.removeEventListener("change", atualizarNomeMunicipio);
         selectCodigo.addEventListener("change", atualizarNomeMunicipio);
     }
@@ -4711,17 +4750,21 @@ window.abrirFormularioMunicipio = function (alterar = false) {
         }
 
         const index = parseInt(selecionado.value);
-        const m = window.municipiosTemp?.[index]; // 🔧 Correção aqui
+        const m = window.municipiosTemp?.[index];
         if (!m) {
             alert("Município inválido.");
             return;
         }
 
+        // ✅ Suporte tanto para nomes vindos do banco quanto temporários
+        const codigo = m.codigo_municipio || m.codigo || "";
+        const nome = m.nome_municipio || m.nome || "";
+
         inputId.value = index;
-        selectCodigo.value = m.codigo;
-        inputNome.value = m.nome;
-        document.getElementById("unidadeMedidaMunicipio").value = m.un_medida;
-        document.getElementById("quantidade_municipio").value = m.quantidade.toString().replace(".", ",");
+        selectCodigo.value = codigo;
+        inputNome.value = nome;
+        document.getElementById("unidadeMedidaMunicipio").value = m.un_medida || m.unidade_medida || "";
+        document.getElementById("quantidade_municipio").value = m.quantidade?.toString().replace(".", ",") || "";
     }
 
     const modal = new bootstrap.Modal(document.getElementById("modalMunicipio"));
@@ -4731,26 +4774,62 @@ window.abrirFormularioMunicipio = function (alterar = false) {
 // ✅ Atualiza a tabela de municípios com base no array
 function atualizarTabelaMunicipios() {
     const corpoTabela = document.getElementById("corpoTabelaMunicipios");
-    corpoTabela.innerHTML = ""; // Limpa a tabela
+    corpoTabela.innerHTML = "";
 
-    // 🔐 Garantia de que o array global existe
-    if (!window.municipiosTemp || window.municipiosTemp.length === 0) {
+    if (!Array.isArray(window.municipiosTemp)) {
+        console.warn("⚠️ municipiosTemp não é um array.");
         return;
     }
 
-    window.municipiosTemp.forEach((m, i) => {
-        const linha = document.createElement("tr");
+    window.municipiosTemp.forEach((m, index) => {
+        const codigo = m.codigo_municipio || m.codigo || "❓";
+        const nome = m.nome_municipio || m.nome || "❓";
+        const quantidade = parseFloat(m.quantidade || 0).toFixed(2).replace(".", ",");
 
-        linha.innerHTML = `
-            <td><input type="radio" name="municipioSelecionado" value="${i}"></td>
-            <td>${m.codigo}</td>
-            <td>${m.nome}</td>
-            <td>${parseFloat(m.quantidade).toFixed(2).replace(".", ",")}</td>
+        const id = m.id !== undefined ? m.id : index;
+
+        const linha = `
+            <tr>
+                <td><input type="radio" name="municipioSelecionado" value="${index}"></td>
+                <td>${codigo}</td>
+                <td>${nome}</td>
+                <td>${quantidade}</td>
+            </tr>
         `;
-
-        corpoTabela.appendChild(linha);
+        corpoTabela.insertAdjacentHTML("beforeend", linha);
     });
+
+    console.log("✅ Tabela de municípios atualizada.");
 }
+
+// ✅ Função para alterar município da tabela
+document.querySelector("#btnAlterarMunicipio")?.addEventListener("click", function () {
+    const selecionado = document.querySelector("input[name='municipioSelecionado']:checked");
+    if (!selecionado) {
+        alert("Selecione um município da tabela para alterar.");
+        return;
+    }
+
+    const index = parseInt(selecionado.value);
+    const municipio = window.municipiosTemp[index];
+
+    if (!municipio) {
+        alert("Município inválido.");
+        return;
+    }
+
+    const codigo = municipio.codigo_municipio || municipio.codigo || "";
+    const nome = municipio.nome_municipio || municipio.nome || "";
+
+    document.getElementById("codigoMunicipioSelect").value = codigo;
+    document.getElementById("nomeMunicipioInput").value = nome;
+    document.getElementById("unidadeMedidaMunicipio").value = municipio.un_medida || "";
+    document.getElementById("quantidade_municipio").value = municipio.quantidade?.toString().replace(".", ",") || "";
+    document.getElementById("municipio_id").value = municipio.id !== undefined ? municipio.id : index;
+
+    const modal = new bootstrap.Modal(document.getElementById("modalMunicipio"));
+    modal.show();
+});
 
 // ✅ Excluir município selecionado
 window.excluirMunicipio = function () {
@@ -4981,104 +5060,79 @@ Excesso de ${Math.abs(diferenca).toFixed(2)} ${unidade}.`);
 // ✅ Função para salvar município na tabela temporária
 window.salvarMunicipioTemporario = function () {
     const codigo = document.getElementById("codigoMunicipioSelect")?.value;
-    const nome = document.getElementById("nomeMunicipioInput")?.value;
     const unidade_medida = document.getElementById("unidadeMedidaMunicipio")?.value;
     const quantidadeRaw = document.getElementById("quantidade_municipio")?.value;
-    const indexEditando = document.getElementById("municipio_id").value;
+    const idBanco = document.getElementById("municipio_id")?.value;
+    const regiao = document.querySelector('select[name="regiao"]')?.value;
 
-    // 🔍 Validação básica de preenchimento
+    // ✅ Busca segura do nome do município
+    const nome = codigo && regiao && regioesMunicipios?.[regiao]?.[codigo] 
+        ? regioesMunicipios[regiao][codigo] 
+        : document.getElementById("nomeMunicipioInput")?.value?.trim() || "";
+
     if (!codigo || !nome || !unidade_medida || !quantidadeRaw) {
         alert("Preencha todos os campos obrigatórios.");
         return;
     }
 
-    // 🔍 Validação de quantidade válida e maior que zero
     const quantidade = parseFloat(quantidadeRaw.replace(",", "."));
     if (isNaN(quantidade) || quantidade <= 0) {
         alert("Quantidade inválida.");
         return;
     }
 
-    // 🔍 Regra para unidade Percentual
-    if (unidade_medida === "Percentual" && quantidade > 100) {
-        alert("Para unidade Percentual, a quantidade do município não pode ser maior que 100.");
-        return;
-    }
-
-    // 🔍 Verifica se unidade da subação e do município são iguais
     const unSubacao = document.getElementById("unidade_medida")?.value;
     if (unidade_medida !== unSubacao) {
         alert(`A unidade de medida do município deve ser igual à unidade da Subação (${unSubacao}).`);
         return;
     }
 
-    // 🔍 Quantidade da Subação deve ser válida
     const quantidadeSubacaoRaw = document.getElementById("quantidade")?.value;
     const quantidadeSubacao = parseFloat(quantidadeSubacaoRaw.replace(",", "."));
     if (isNaN(quantidadeSubacao) || quantidadeSubacao <= 0) {
-        alert("A quantidade total da Subação é inválida ou igual a zero. Por favor, corrija antes de incluir municípios.");
+        alert("A quantidade total da Subação é inválida ou igual a zero.");
         return;
     }
 
-    // 🔍 Soma total atual dos municípios (desconsiderando o em edição)
     let totalAtual = 0;
     window.municipiosTemp.forEach((m, i) => {
-        if (i !== parseInt(indexEditando)) {
-            totalAtual += parseFloat(m.quantidade);
+        const mesmoRegistro = m.id?.toString() === idBanco || i.toString() === idBanco;
+        if (!mesmoRegistro) {
+            totalAtual += parseFloat(m.quantidade || 0);
         }
     });
 
-    // 🔍 Validação de excesso na meta da subação
     if (totalAtual + quantidade > quantidadeSubacao) {
         const restante = quantidadeSubacao - totalAtual;
-        alert(`A quantidade excede o definido para a região da Subação. Você só pode incluir até ${restante.toFixed(2)} ${unSubacao}.`);
+        alert(`A quantidade excede o limite da Subação. Máximo permitido: ${restante.toFixed(2)} ${unSubacao}.`);
         return;
     }
 
-    // ✅ Registro pronto para inserção ou substituição
-    const novoRegistro = { codigo, nome, un_medida: unidade_medida, quantidade };
+    const novoRegistro = {
+        id: idBanco && !isNaN(idBanco) && parseInt(idBanco) >= 0 ? parseInt(idBanco) : undefined,
+        codigo_municipio: codigo,
+        nome_municipio: nome,
+        un_medida: unidade_medida,
+        quantidade
+    };
 
-    if (indexEditando !== "") {
-        window.municipiosTemp[parseInt(indexEditando)] = novoRegistro;
+    console.log("✅ Salvando município temporário:", novoRegistro);
+
+    const index = window.municipiosTemp.findIndex(m =>
+        m.id?.toString() === idBanco || window.municipiosTemp.indexOf(m).toString() === idBanco
+    );
+
+    if (idBanco !== "" && index !== -1) {
+        window.municipiosTemp[index] = novoRegistro;
     } else {
         window.municipiosTemp.push(novoRegistro);
     }
 
-    // 🔄 Atualiza a tabela visível
     atualizarTabelaMunicipios();
 
-    // ✅ Fecha o modal
     const modalEl = document.getElementById("modalMunicipio");
     bootstrap.Modal.getInstance(modalEl).hide();
 };
-
-// ✅ Função para alterar município da tabela
-document.querySelector("#btnAlterarMunicipio")?.addEventListener("click", function () {
-    const selecionado = document.querySelector("input[name='municipioSelecionado']:checked");
-    if (!selecionado) {
-        alert("Selecione um município da tabela para alterar.");
-        return;
-    }
-
-    const index = parseInt(selecionado.value);
-    const municipio = window.municipiosTemp[index];
-
-    if (!municipio) {
-        alert("Município inválido.");
-        return;
-    }
-
-    // Preenche o formulário do modal
-    document.getElementById("codigoMunicipioSelect").value = municipio.codigo;
-    document.getElementById("nomeMunicipioInput").value = municipio.nome;
-    document.getElementById("unidadeMedidaMunicipio").value = municipio.un_medida;
-    document.getElementById("quantidade_municipio").value = municipio.quantidade.toString().replace(".", ",");
-    document.getElementById("municipio_id").value = index;
-
-    // Abre o modal
-    const modal = new bootstrap.Modal(document.getElementById("modalMunicipio"));
-    modal.show();
-});
 
 // ✅ Função para excluir município da tabela
 document.querySelector("#btnExcluirMunicipio")?.addEventListener("click", function () {
@@ -5228,6 +5282,16 @@ window.salvarSubacaoEntrega = function () {
         alert("❌ Erro inesperado ao salvar subação.");
     });
 };
+
+function abrirPaginaEtapa() {
+    const selecionado = document.querySelector('input[name="subacaoSelecionada"]:checked');
+    if (!selecionado) {
+        alert("Por favor, selecione uma Subação para acessar as Etapas.");
+        return;
+    }
+    const subacaoId = selecionado.value;
+    window.location.href = `/etapas/${subacaoId}`;
+}
 
 
 // Expor funções globais

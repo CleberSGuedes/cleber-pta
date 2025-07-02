@@ -101,3 +101,48 @@ class MunicipioEntrega(db.Model):
     excluido_em = db.Column(db.DateTime)
 
     subacao_entrega = db.relationship("SubacaoEntrega", backref="municipios")
+
+class Etapa(db.Model):
+    __tablename__ = 'etapa'
+
+    id = db.Column(db.Integer, primary_key=True)
+    subacao_entrega_id = db.Column(db.Integer, db.ForeignKey('subacao_entrega.id'), nullable=False)
+    etapa_nome = db.Column(db.String(255), nullable=False)
+    data_inicio = db.Column(db.Date, nullable=False)
+    data_fim = db.Column(db.Date, nullable=False)
+    responsavel = db.Column(db.String(255), nullable=False)
+    cpf = db.Column(db.String(14), nullable=False)
+    email = db.Column(db.String(255), nullable=False)
+    ativo = db.Column(db.Boolean, default=True)
+    alterado_em = db.Column(db.DateTime, default=datetime.utcnow)
+    excluido_em = db.Column(db.DateTime, nullable=True)
+
+    subacao = db.relationship('SubacaoEntrega', backref=db.backref('etapas', lazy=True))
+
+
+class MemoriaCalculo(db.Model):
+    __tablename__ = "memoria_calculo"
+    
+    id = db.Column(db.Integer, primary_key=True)
+    etapa_id = db.Column(db.Integer, db.ForeignKey("etapa.id"), nullable=False)
+    
+    itens_despesa = db.Column(db.Text)
+    unidade_medida = db.Column(db.String(100))
+    quantidade = db.Column(db.Float)
+    valor_unitario = db.Column(db.Float)
+    valor_total = db.Column(db.Float)
+    
+    categoria_economica = db.Column(db.String(100))
+    grupo_despesa = db.Column(db.String(100))
+    modalidade = db.Column(db.String(100))
+    elemento_despesa = db.Column(db.String(100))
+    subelemento = db.Column(db.String(100))
+    fonte_recursos = db.Column(db.String(100))
+    identificador_uso = db.Column(db.String(100))
+    legislacao = db.Column(db.Text)
+    
+    ativo = db.Column(db.Boolean, default=True)
+    alterado_em = db.Column(db.DateTime, default=datetime.utcnow)
+    excluido_em = db.Column(db.DateTime, nullable=True)
+
+    etapa = db.relationship("Etapa", backref=db.backref("memorias", lazy=True))

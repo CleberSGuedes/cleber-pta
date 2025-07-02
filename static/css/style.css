@@ -60,16 +60,30 @@ img {
 /* FAIXA INSTITUCIONAL */
 /* =================== */
 .institucional-bar {
-    background-color: #3c7e7e; /* tom mais claro que #005f5f */
-    padding: 8px 0;
+    background-color: #3c7e7e;
+    padding: 8px 20px;
     font-weight: bold;
     font-size: 14px;
     letter-spacing: 1px;
     text-transform: uppercase;
     color: white;
-    text-align: center;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
+.institucional-texto {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+}
+
+#usuarios-online {
+    margin-left: auto;
+    white-space: nowrap;
+}
 /* ============================= */
 /* ESTILO PADRÃO DO SISTEMA PTA */
 /* ============================= */
@@ -176,4 +190,145 @@ label {
     white-space: nowrap;
     text-align: center;
     border-radius: 0.4rem;
+}
+
+/* Caixa de busca dentro do Select2 (dropdown aberto) */
+.select2-container--default .select2-search--dropdown .select2-search__field {
+    background-color: #f0f0f0 !important; /* Cinza claro */
+    color: #000 !important;               /* Texto preto */
+    border: 1px solid #ccc !important;    /* Borda cinza */
+}
+/* Cor de fundo ao passar o mouse sobre as opções do Select2 */
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #f0f0f0 !important; /* Cinza claro */
+    color: #000 !important;               /* Texto preto, opcional */
+}
+
+/* =================== */
+/* SEÇÃO DE NOTÍCIAS - HOME */
+/* =================== */
+.noticia-box {
+    background-color: white;
+    border-left: 5px solid #005f5f;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    padding: 20px 25px;
+    margin-bottom: 30px;
+    border-radius: 6px;
+    transition: box-shadow 0.3s ease;
+}
+
+.noticia-box:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.noticia-box h5 {
+    color: #003B46;
+    margin-bottom: 8px;
+}
+
+.noticia-box small {
+    color: #888;
+    display: block;
+    margin-bottom: 12px;
+}
+
+.noticia-box p {
+    color: #333;
+    font-size: 12.2px;
+    line-height: 1.6;
+    text-align: justify; /* 👈 esta linha justifica o texto */
+}
+
+/* =================== */
+/* RESPONSIVIDADE GERAL */
+/* =================== */
+
+.container {
+    max-width: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+@media (min-width: 576px) {
+    .container {
+        max-width: 540px;
+    }
+}
+
+@media (min-width: 768px) {
+    .container {
+        max-width: 720px;
+    }
+}
+
+@media (min-width: 992px) {
+    .container {
+        max-width: 960px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1140px;
+    }
+}
+
+/* =================== */
+/* NOTÍCIA RESPONSIVA */
+/* =================== */
+.noticia-box {
+    background: linear-gradient(to top, #d9eff380 0%, #ffffff 100%);
+    border-left: 5px solid #005f5f;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    padding: 1.5rem;
+    margin-bottom: 0.3rem;
+    border-radius: 6px;
+    transition: box-shadow 0.3s ease;
+    word-wrap: break-word;
+}
+
+.noticia-box:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.noticia-box h5 {
+    color: #003B46;
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.noticia-box small {
+    color: #888;
+    display: block;
+    margin-bottom: 0.8rem;
+    font-size: 0.875rem;
+}
+
+.noticia-box p {
+    color: #333;
+    font-size: 0.94rem;
+    line-height: 1.6;
+}
+
+.min-altura {
+    min-height: 80px; /* ajuste conforme necessário */
+}
+/* Ajustes para telas menores */
+@media (max-width: 576px) {
+    .noticia-box {
+        padding: 1rem;
+    }
+
+    .noticia-box h5 {
+        font-size: 1.1rem;
+    }
+
+    .noticia-box p {
+        font-size: 0.88rem;
+    }
+}
+
+.text-danger {
+  color: #dc3545;
+  font-weight: bold;
 }

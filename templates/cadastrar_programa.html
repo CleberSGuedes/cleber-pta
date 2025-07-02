@@ -48,18 +48,22 @@
                 </div>
 
                 <!-- Botões -->
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <button class="btn btn-padrao me-2" onclick="mostrarFormulario()">+ Cadastrar</button>
-                        <button class="btn btn-warning me-2" onclick="mostrarFormulario(true)">Alterar</button>
-                        <button class="btn btn-danger" onclick="excluirPrograma()">Excluir</button>
-                    </div>
-                    <div>
-                        <form id="formAcoes" method="get" action="/acoes">
-                            <input type="hidden" name="programa_id" id="programa_id_redirect">
-                            <button type="button" class="btn btn-padrao" onclick="mostrarEtapa3()">Ação/PAOE</button>
-                        </form>
-                    </div>
+                <style>
+                    .btn-reduzido {
+                        padding: 6px 10px;
+                        font-size: 0.85rem;
+                    }
+                </style>
+
+                <div class="d-flex justify-content-center gap-2 flex-wrap">
+                    <button class="btn btn-padrao btn-reduzido" onclick="mostrarFormulario()">+ Cadastrar</button>
+                    <button class="btn btn-warning btn-reduzido" onclick="mostrarFormulario(true)">Alterar</button>
+                    <button class="btn btn-danger btn-reduzido" onclick="excluirPrograma()">Excluir</button>
+                    
+                    <form id="formAcoes" method="get" action="/acoes" class="d-inline">
+                        <input type="hidden" name="programa_id" id="programa_id_redirect">
+                        <button type="button" class="btn btn-padrao btn-reduzido" onclick="mostrarEtapa3()">Ação/PAOE</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -119,4 +123,38 @@
 </div>
 
 <script src="{{ url_for('static', filename='js/programa.js') }}"></script>
+
+<!-- Bloco Jinja2 para armazenar a mensagem na sessão -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <script>
+        sessionStorage.setItem("mensagemCategoria", "{{ category }}");
+        sessionStorage.setItem("mensagemTexto", "{{ message }}");
+      </script>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<!-- JS para exibir com SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const categoria = sessionStorage.getItem("mensagemCategoria");
+    const texto = sessionStorage.getItem("mensagemTexto");
+
+    if (categoria && texto) {
+      Swal.fire({
+        icon: categoria === "success" ? "success" :
+              categoria === "danger" ? "error" : categoria,
+        title: texto,
+        confirmButtonColor: '#005f5f'
+      });
+
+      sessionStorage.removeItem("mensagemCategoria");
+      sessionStorage.removeItem("mensagemTexto");
+    }
+  });
+</script>
+
 {% endblock %}
