@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+
+{% block title %}Cadastrar PTA{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- ETAPA 1 - Cadastrar Programa -->
+    <div class="col-md-6">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header etapa-titulo">Cadastrar Programa</div>
+            <div class="card-body font-sistema">
+                <!-- <p class="text-muted">Exercício 2026</p> -->
+
+                <!-- Tabela -->
+                <div class="table-responsive mb-3">
+                    <form method="post" id="formExcluir">
+                        <table class="table table-bordered table-hover text-center">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Selecionar</th>
+                                    <th>Programa</th>
+                                    <th>Função</th>
+                                    <th>Responsável</th>
+                                    <th>CPF</th>
+                                    <th>E-mail</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for p in programas %}
+                                <tr>
+                                    <td>
+                                        <input type="radio"
+                                               name="programaSelecionado"
+                                               value="{{ p.id }}"
+                                               data-cpf="{{ p.cpf }}"
+                                               data-email="{{ p.email }}">
+                                    </td>
+                                    <td>{{ p.nome }}</td>
+                                    <td>{{ p.funcao }}</td>
+                                    <td>{{ p.responsavel }}</td>
+                                    <td>{{ p.cpf }}</td>
+                                    <td>{{ p.email }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+
+                <!-- Botões -->
+                <style>
+                    .btn-reduzido {
+                        padding: 6px 10px;
+                        font-size: 0.85rem;
+                    }
+                </style>
+
+                <div class="d-flex justify-content-center gap-2 flex-wrap">
+                    <button class="btn btn-padrao btn-reduzido" onclick="mostrarFormulario()">+ Cadastrar</button>
+                    <button class="btn btn-warning btn-reduzido" onclick="mostrarFormulario(true)">Alterar</button>
+                    <button class="btn btn-danger btn-reduzido" onclick="excluirPrograma()">Excluir</button>
+                    
+                    <form id="formAcoes" method="get" action="/acoes" class="d-inline">
+                        <input type="hidden" name="programa_id" id="programa_id_redirect">
+                        <button type="button" class="btn btn-padrao btn-reduzido" onclick="mostrarEtapa3()">Ação/PAOE</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ETAPA 2 - Incluir Programa -->
+    <div class="col-md-6" id="formularioPrograma" style="display: none;">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header etapa-titulo">Incluir Programa</div>
+            <div class="card-body font-sistema">
+                <form method="post" action="{{ url_for('inserir_programa') }}">
+                    <div class="mb-2">
+                        <label>Programa:</label>
+                        <select name="nome" id="selectPrograma" class="form-select" required>
+                            <option value="" class="placeholder-option">Selecione um item</option>
+                            <option value="036 - Apoio administrativo">036 - Apoio administrativo</option>
+                            <option value="533 - Educação 10 Anos">533 - Educação 10 Anos</option>
+                            <option value="534 - Infraestrutura Educacional">534 - Infraestrutura Educacional</option>
+                            <option value="996 - Operações especiais: outras">996 - Operações especiais: outras</option>
+                            <option value="997 - Previdência de inativos e pensionistas do Estado">997 - Previdência de inativos e pensionistas do Estado</option>
+                            <option value="998 - Operações especiais: cumprimento de sentenças judiciais">998 - Operações especiais: cumprimento de sentenças judiciais</option>
+                        </select>
+                    </div>
+
+                    <input type="hidden" name="programa_id" id="programa_id">
+                    
+                    <div class="mb-2">
+                        <label>Função:</label>
+                        <select name="funcao" id="selectFuncao" class="form-select" required>
+                            <option value="" class="placeholder-option">Selecione um item</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-2">
+                        <label>Responsável:</label>
+                        <input type="text" name="responsavel" id="responsavel" class="form-control" required autocomplete="off">
+                    </div>
+
+                    <div class="mb-2">
+                        <label>CPF:</label>
+                        <input type="text" name="cpf" id="cpf" class="form-control" maxlength="14" placeholder="000.000.000-00" required autocomplete="off">
+                    </div>
+
+                    <div class="mb-3">
+                        <label>E-mail:</label>
+                        <input type="email" name="email" id="email" class="form-control" required autocomplete="off">
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-secondary" onclick="fecharFormulario()">Voltar</button>
+                        <button type="button" class="btn btn-padrao" id="botaoCadastrar" onclick="validarFormulario()">Cadastrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/programa.js') }}"></script>
+
+<!-- Bloco Jinja2 para armazenar a mensagem na sessão -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <script>
+        sessionStorage.setItem("mensagemCategoria", "{{ category }}");
+        sessionStorage.setItem("mensagemTexto", "{{ message }}");
+      </script>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<!-- JS para exibir com SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const categoria = sessionStorage.getItem("mensagemCategoria");
+    const texto = sessionStorage.getItem("mensagemTexto");
+
+    if (categoria && texto) {
+      Swal.fire({
+        icon: categoria === "success" ? "success" :
+              categoria === "danger" ? "error" : categoria,
+        title: texto,
+        confirmButtonColor: '#005f5f'
+      });
+
+      sessionStorage.removeItem("mensagemCategoria");
+      sessionStorage.removeItem("mensagemTexto");
+    }
+  });
+</script>
+
+{% endblock %}

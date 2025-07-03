@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+
+{% block title %}Cadastrar PTA{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- ETAPA 3 - Cadastrar Ação (PAOE) -->
+    <div class="col-md-6">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header etapa-titulo">Cadastrar Ação (PAOE)</div>
+            <div class="card-body font-sistema">
+                <p><strong>Programa Governo:</strong> {{ programa.nome }}</p>
+                <p><strong>Função:</strong> {{ programa.funcao }}</p>
+
+                <!-- Tabela das ações -->
+                <div class="table-responsive mb-3">
+                    <form method="post" id="formAcao">
+                        <table class="table table-bordered table-hover text-center">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Selecionar</th>
+                                    <th>Subfunção</th>
+                                    <th>Ação (PAOE)</th>
+                                    <th>Responsável</th>
+                                    <th>CPF</th>
+                                    <th>E-mail</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for acao in acoes %}
+                                <tr>
+                                    <td><input type="radio" name="acaoSelecionada" value="{{ acao.id }}"></td>
+                                    <td>{{ acao.subfuncao }}</td>
+                                    <td>{{ acao.acao_paoe }}</td>
+                                    <td>{{ acao.responsavel }}</td>
+                                    <td>{{ acao.cpf }}</td>
+                                    <td>{{ acao.email }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+                <style>
+                    .btn-reduzido {
+                        padding: 6px 10px;
+                        font-size: 0.85rem;
+                    }
+                </style>
+
+                <div class="d-flex justify-content-center gap-2 flex-nowrap">
+                    <a href="{{ url_for('cadastrar_pta') }}" class="btn btn-secondary btn-reduzido">Voltar</a>
+                    <button class="btn btn-success btn-reduzido" onclick="abrirFormularioAcao()">+ Cadastrar</button>
+                    <button class="btn btn-warning btn-reduzido" onclick="abrirFormularioAcao(true)">Alterar</button>
+                    <button class="btn btn-danger btn-reduzido" onclick="excluirAcao()">Excluir</button>
+                    <button type="button" class="btn btn-padrao btn-reduzido" onclick="irParaProdutoAcao()">Produto Ação</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ETAPA 4 - Incluir Ação (PAOE) -->
+    <div class="col-md-6" id="formularioAcao" style="display: none;">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header etapa-titulo">Incluir Ação (PAOE)</div>
+            <div class="card-body font-sistema">
+                <form method="post" action="{{ url_for('inserir_acao') }}" id="formNovaAcao">
+                    <!-- Subfunção -->
+                    <div class="mb-2">
+                        <label>Subfunção:</label>
+                        <select name="subfuncao" id="selectSubfuncao" class="form-select" required>
+                            <option value="">Selecione uma subfunção</option>
+                        </select>
+                    </div>
+
+                    <!-- Ação (PAOE) -->
+                    <div class="mb-2">
+                        <label>Ação (PAOE):</label>
+                        <select name="acao_paoe" id="acao_paoe" class="form-select" required>
+                            <option value="">Selecione uma ação</option>
+                        </select>
+                    </div>
+
+                    <!-- Responsável -->
+                    <div class="mb-2">
+                        <label>Responsável:</label>
+                        <input type="text" name="responsavel" id="respAcao" class="form-control" required autocomplete="off">
+                    </div>
+
+                    <!-- CPF -->
+                    <div class="mb-2">
+                        <label>CPF:</label>
+                        <input type="text" name="cpf" id="cpfAcao" class="form-control" maxlength="14" placeholder="000.000.000-00" required autocomplete="off">
+                    </div>
+
+                    <!-- E-mail -->
+                    <div class="mb-3">
+                        <label>E-mail:</label>
+                        <input type="email" name="email" id="emailAcao" class="form-control" required autocomplete="off">
+                    </div>
+
+                    <!-- Campos ocultos -->
+                    <input type="hidden" name="acao_id" id="acao_id">
+                    <input type="hidden" name="programa_id" value="{{ programa.id }}">
+
+                    <!-- Botões -->
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-secondary" onclick="fecharFormularioAcao()">Voltar</button>
+                        <button type="button" class="btn btn-padrao" id="btnCadastrarAcao" onclick="validarAcao()">Cadastrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Variável JS global para uso em acao.js -->
+<script src="{{ url_for('static', filename='js/selects_dependentes.js') }}"></script>
+<script src="{{ url_for('static', filename='js/acao.js') }}"></script>
+<script>
+    const nomeProgramaAtual = "{{ programa.nome }}";
+</script>
+
+<script>
+    function irParaProdutoAcao() {
+        const selecionado = document.querySelector('input[name="acaoSelecionada"]:checked');
+        if (!selecionado) {
+            alert("Selecione uma ação para continuar.");
+            return;
+        }
+    
+        const acaoId = selecionado.value;
+        const programaId = "{{ programa.id }}";  // Jinja renderiza esse valor fixo
+    
+        window.location.href = `/produtos_acao/${programaId}/${acaoId}`;
+    }
+    </script>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <script>
+        sessionStorage.setItem("mensagemCategoria", "{{ category }}");
+        sessionStorage.setItem("mensagemTexto", "{{ message }}");
+      </script>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const categoria = sessionStorage.getItem("mensagemCategoria");
+    const texto = sessionStorage.getItem("mensagemTexto");
+
+    if (categoria && texto) {
+      Swal.fire({
+        icon: categoria === "success" ? "success" :
+              categoria === "danger" ? "error" :
+              categoria === "warning" ? "warning" : "info",
+        title: texto,
+        confirmButtonColor: '#005f5f'
+      });
+
+      sessionStorage.removeItem("mensagemCategoria");
+      sessionStorage.removeItem("mensagemTexto");
+    }
+  });
+</script>
+
+{% endblock %}

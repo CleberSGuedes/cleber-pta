@@ -1,0 +1,77 @@
+.pta-container {
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: 75vh;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 8px;
+}
+
+.pta-table {
+    width: max-content;
+    min-width: 100%;
+    border-collapse: collapse;
+    table-layout: auto;
+    font-size: 0.8rem;
+}
+
+
+.pta-table thead {
+    position: sticky;
+    top: 0;
+    background-color: #f8fafc;
+    z-index: 10;
+}
+
+.pta-table th,
+.pta-table td {
+    border: 1px solid #ccc;
+    padding: 6px 8px;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.pta-table th {
+    background-color: #e2e8f0;
+    font-weight: 600;
+    font-size: 12px;
+    color: #1a202c;
+}
+
+.pta-table tr:nth-child(even) {
+    background-color: #f7fafc;
+}
+
+.pta-table tr:hover {
+    background-color: #edf2f7;
+}
+
+.btn-download-excel {
+    background-color: #005f5f;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 14px;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.btn-download-excel:hover {
+    background-color: #005f5f;
+    text-decoration: none;
+}
+
+.titulo-barra {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.titulo-barra h1 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    flex-grow: 1;
+    margin-right: 1rem;
+}

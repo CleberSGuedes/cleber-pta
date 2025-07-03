@@ -1,0 +1,36 @@
+# Arquivos compilados Python
+__pycache__/
+*.py[cod]
+
+# Ambiente virtual (caso esteja na raiz ou dentro de pta/)
+env/
+venv/
+.venv/
+
+# Arquivos de configuração locais
+*.env
+.env.*
+
+# Logs e arquivos temporários
+*.log
+*.tmp
+*.bak
+
+# Dados e arquivos de teste
+*.sqlite3
+*.db
+*.csv
+
+# Arquivos específicos do projeto
+pta/rec.txt
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs e editores
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace

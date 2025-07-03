@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+
+{% block title %}Visualizar PTA{% endblock %}
+
+{% block content %}
+<div class="titulo-barra">
+    <h1>Visualização do Plano de Trabalho Anual</h1>
+    <a href="{{ url_for('baixar_excel') }}" class="btn-download-excel" download>
+        ⬇️ Baixar Excel
+    </a>
+</div>
+
+
+
+
+    <div class="pta-container">
+    <table id="pta-tabela" class="pta-table">
+            <thead class="bg-gray-200 text-xs text-gray-700">
+                <tr>
+                    <!-- programa -->
+                    <th class="border px-2 py-1">Programa</th>
+                    <th class="border px-2 py-1">Função</th>
+                    <th class="border px-2 py-1">Resp. Prog.</th>
+                    <th class="border px-2 py-1">CPF Prog.</th>
+                    <th class="border px-2 py-1">E-mail Prog.</th>
+
+                    <!-- acao -->
+                    <th class="border px-2 py-1">Subfunção</th>
+                    <th class="border px-2 py-1">Ação PAOE</th>
+                    <th class="border px-2 py-1">Resp. Ação</th>
+                    <th class="border px-2 py-1">CPF Ação</th>
+                    <th class="border px-2 py-1">E-mail Ação</th>
+
+                    <!-- produto_acao -->
+                    <th class="border px-2 py-1">Produto</th>
+                    <th class="border px-2 py-1">Un. Medida</th>
+                    <th class="border px-2 py-1">Qtd. Produto</th>
+
+                    <!-- subacao_entrega -->
+                    <th class="border px-2 py-1">Subação</th>
+                    <th class="border px-2 py-1">Produto Subação</th>
+                    <th class="border px-2 py-1">UG</th>
+                    <th class="border px-2 py-1">US</th>
+                    <th class="border px-2 py-1">Un. Medida Sub.</th>
+                    <th class="border px-2 py-1">Qtd. Subação</th>
+                    <th class="border px-2 py-1">Detalhamento</th>
+                    <th class="border px-2 py-1">Resp. Subação</th>
+                    <th class="border px-2 py-1">CPF Subação</th>
+                    <th class="border px-2 py-1">E-mail Subação</th>
+                    <th class="border px-2 py-1">Região</th>
+                    <th class="border px-2 py-1">Subfunção UG</th>
+                    <th class="border px-2 py-1">ADJ</th>
+                    <th class="border px-2 py-1">Macropolítica</th>
+                    <th class="border px-2 py-1">Pilar</th>
+                    <th class="border px-2 py-1">Eixo</th>
+                    <th class="border px-2 py-1">Política</th>
+                    <th class="border px-2 py-1">Público Transversal</th>
+
+                    <!-- municipio_entrega -->
+                    <th class="border px-2 py-1">Cod. Município</th>
+                    <th class="border px-2 py-1">Nome Município</th>
+                    <th class="border px-2 py-1">Un. Medida Município</th>
+                    <th class="border px-2 py-1">Qtd. Município</th>
+
+                    <!-- etapa -->
+                    <th class="border px-2 py-1">Etapa</th>
+                    <th class="border px-2 py-1">Início</th>
+                    <th class="border px-2 py-1">Fim</th>
+                    <th class="border px-2 py-1">Resp. Etapa</th>
+                    <th class="border px-2 py-1">CPF Etapa</th>
+                    <th class="border px-2 py-1">E-mail Etapa</th>
+
+                    <!-- memoria_calculo -->
+                    <th class="border px-2 py-1">Item Despesa</th>
+                    <th class="border px-2 py-1">Un. Medida</th>
+                    <th class="border px-2 py-1">Qtd.</th>
+                    <th class="border px-2 py-1">V. Unitário</th>
+                    <th class="border px-2 py-1">V. Total</th>
+                    <th class="border px-2 py-1">Cat. Econômica</th>
+                    <th class="border px-2 py-1">Grupo Despesa</th>
+                    <th class="border px-2 py-1">Modalidade</th>
+                    <th class="border px-2 py-1">Elemento</th>
+                    <th class="border px-2 py-1">Subelemento</th>
+                    <th class="border px-2 py-1">Fonte</th>
+                    <th class="border px-2 py-1">ID Uso</th>
+                    <th class="border px-2 py-1">Legislação</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for linha in dados %}
+                <tr>
+                    <td class="border px-1 py-1">{{ linha.programa_nome }}</td>
+                    <td class="border px-1 py-1">{{ linha.funcao }}</td>
+                    <td class="border px-1 py-1">{{ linha.programa_responsavel }}</td>
+                    <td class="border px-1 py-1">{{ linha.programa_cpf }}</td>
+                    <td class="border px-1 py-1">{{ linha.programa_email }}</td>
+
+                    <td class="border px-1 py-1">{{ linha.subfuncao }}</td>
+                    <td class="border px-1 py-1">{{ linha.acao_paoe }}</td>
+                    <td class="border px-1 py-1">{{ linha.acao_responsavel }}</td>
+                    <td class="border px-1 py-1">{{ linha.acao_cpf }}</td>
+                    <td class="border px-1 py-1">{{ linha.acao_email }}</td>
+
+                    <td class="border px-1 py-1">{{ linha.produto_nome }}</td>
+                    <td class="border px-1 py-1">{{ linha.un_medida }}</td>
+                    <td class="border px-1 py-1">{{ linha.produto_quantidade }}</td>
+
+                    <td class="border px-1 py-1">{{ linha.subacao_entrega }}</td>
+                    <td class="border px-1 py-1">{{ linha.produto_subacao }}</td>
+                    <td class="border px-1 py-1">{{ linha.unidade_gestora }}</td>
+                    <td class="border px-1 py-1">{{ linha.unidade_setorial }}</td>
+                    <td class="border px-1 py-1">{{ linha.unidade_medida }}</td>
+                    <td class="border px-1 py-1">{{ linha.subacao_quantidade }}</td>
+                    <td class="border px-1 py-1">{{ linha.detalhamento }}</td>
+                    <td class="border px-1 py-1">{{ linha.subacao_responsavel }}</td>
+                    <td class="border px-1 py-1">{{ linha.subacao_cpf }}</td>
+                    <td class="border px-1 py-1">{{ linha.subacao_email }}</td>
+                    <td class="border px-1 py-1">{{ linha.regiao }}</td>
+                    <td class="border px-1 py-1">{{ linha.subfuncao_ug }}</td>
+                    <td class="border px-1 py-1">{{ linha.adj }}</td>
+                    <td class="border px-1 py-1">{{ linha.macropolitica }}</td>
+                    <td class="border px-1 py-1">{{ linha.pilar }}</td>
+                    <td class="border px-1 py-1">{{ linha.eixo }}</td>
+                    <td class="border px-1 py-1">{{ linha.politica_decreto }}</td>
+                    <td class="border px-1 py-1">{{ linha.publico_ods }}</td>
+
+                    <td class="border px-1 py-1">{{ linha.codigo_municipio }}</td>
+                    <td class="border px-1 py-1">{{ linha.nome_municipio }}</td>
+                    <td class="border px-1 py-1">{{ linha.municipio_un }}</td>
+                    <td class="border px-1 py-1">{{ linha.municipio_quantidade }}</td>
+
+                    <td class="border px-1 py-1">{{ linha.etapa_nome }}</td>
+                    <td class="border px-1 py-1">{{ linha.data_inicio }}</td>
+                    <td class="border px-1 py-1">{{ linha.data_fim }}</td>
+                    <td class="border px-1 py-1">{{ linha.etapa_responsavel }}</td>
+                    <td class="border px-1 py-1">{{ linha.etapa_cpf }}</td>
+                    <td class="border px-1 py-1">{{ linha.etapa_email }}</td>
+
+                    <td class="border px-1 py-1">{{ linha.itens_despesa }}</td>
+                    <td class="border px-1 py-1">{{ linha.unidade_medida }}</td>
+                    <td class="border px-1 py-1">{{ linha.memoria_quantidade }}</td>
+                    <td class="border px-1 py-1">{{ linha.valor_unitario }}</td>
+                    <td class="border px-1 py-1">{{ linha.valor_total }}</td>
+                    <td class="border px-1 py-1">{{ linha.categoria_economica }}</td>
+                    <td class="border px-1 py-1">{{ linha.grupo_despesa }}</td>
+                    <td class="border px-1 py-1">{{ linha.modalidade }}</td>
+                    <td class="border px-1 py-1">{{ linha.elemento_despesa }}</td>
+                    <td class="border px-1 py-1">{{ linha.subelemento }}</td>
+                    <td class="border px-1 py-1">{{ linha.fonte_recursos }}</td>
+                    <td class="border px-1 py-1">{{ linha.identificador_uso }}</td>
+                    <td class="border px-1 py-1">{{ linha.legislacao }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+
+<!-- jQuery e DataTables JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+<script>
+$(document).ready(function () {
+    // Aplica filtro por coluna
+    $('#pta-tabela thead tr').clone(true).appendTo('#pta-tabela thead');
+    $('#pta-tabela thead tr:eq(1) th').each(function (i) {
+        const title = $(this).text();
+        $(this).html('<input type="text" placeholder="Filtrar ' + title + '" style="width: 100%; font-size: 10px;"/>');
+
+        $('input', this).on('keyup change', function () {
+            if ($('#pta-tabela').DataTable().column(i).search() !== this.value) {
+                $('#pta-tabela').DataTable().column(i).search(this.value).draw();
+            }
+        });
+    });
+
+    $('#pta-tabela').DataTable({
+        orderCellsTop: true,
+        fixedHeader: true,
+        scrollX: true,
+        pageLength: 20,
+        language: {
+            url: "//cdn.datatables.net/plug-ins/1.13.4/i18n/pt-BR.json"
+        }
+    });
+});
+</script>
+
+
+{% endblock %}

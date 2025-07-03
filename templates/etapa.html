@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+
+{% block title %}Etapas da Subação{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Etapa 10 -->
+    <div class="col-md-6">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header etapa-titulo">Cadastrar Etapa na Subação/Entrega</div>
+            <div class="card-body font-sistema">
+                <p><strong>Programa Governo:</strong> {{ programa.nome }}</p>
+                <p><strong>Função:</strong> {{ programa.funcao }}</p>
+                <p><strong>Subfunção:</strong> {{ acao.subfuncao }}</p>
+                <p><strong>Ação (PAOE):</strong> {{ acao.acao_paoe }}</p>
+                <p><strong>Produto da Ação:</strong> {{ produto.nome }}</p>
+                <p><strong>Subação/Entrega:</strong> {{ subacao_entrega.subacao_entrega }}</p>
+
+                <div class="table-responsive mb-3">
+                    <form method="post" id="formExcluirEtapa">
+                        <table class="table table-bordered table-hover text-center">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Selecionar</th>
+                                    <th>Etapa</th>
+                                    <th>Responsável</th>
+                                    <th>CPF</th>
+                                    <th>E-mail</th>
+                                    <th>Data Início</th>
+                                    <th>Data Fim</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for etapa in etapas %}
+                                <tr>
+                                    <td><input type="radio"
+                                               name="etapaSelecionada"
+                                               value="{{ etapa.id }}"
+                                               data-etapa_nome="{{ etapa.etapa_nome }}"
+                                               data-responsavel="{{ etapa.responsavel }}"
+                                               data-cpf="{{ etapa.cpf }}"
+                                               data-email="{{ etapa.email }}"
+                                               data-data_inicio="{{ etapa.data_inicio }}"
+                                               data-data_fim="{{ etapa.data_fim }}"></td>
+                                    <td>{{ etapa.etapa_nome }}</td>
+                                    <td>{{ etapa.responsavel }}</td>
+                                    <td>{{ etapa.cpf }}</td>
+                                    <td>{{ etapa.email }}</td>
+                                    <td>{{ etapa.data_inicio }}</td>
+                                    <td>{{ etapa.data_fim }}</td>                                    
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+
+            <style>
+                .btn-reduzido {
+                    padding: 6px 10px;
+                    font-size: 0.85rem;
+                }
+            </style>
+
+            <div class="d-flex justify-content-center gap-2 flex-nowrap">
+                <a href="{{ url_for('subacoes_entrega', programa_id=programa.id, acao_id=acao.id, produto_id=produto.id) }}" class="btn btn-secondary btn-reduzido">Voltar</a>
+                <button type="button" class="btn btn-success btn-reduzido" onclick="abrirFormularioEtapa()">+ Cadastrar</button>
+                <button type="button" class="btn btn-warning btn-reduzido" onclick="abrirFormularioEtapa(true)">Alterar</button>
+                <button type="button" class="btn btn-danger btn-reduzido" onclick="excluirEtapa()">Excluir</button>
+                <a href="#" id="botaoMemoria" class="btn btn-padrao btn-reduzido">Memória de Cálculo</a>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Etapa 11 -->
+    <div class="col-md-6" id="formularioEtapa" style="display: none;">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header etapa-titulo">Incluir Etapa</div>
+            <div class="card-body font-sistema">
+                <form method="post" action="{{ url_for('inserir_etapa') }}" id="formEtapa">
+                    <input type="hidden" name="etapa_id" id="etapa_id">
+                    <input type="hidden" name="subacao_entrega_id" value="{{ subacao_entrega.id }}">
+
+                    <div class="mb-3">
+                        <label>Etapa:</label>
+                        <input type="text" name="etapa_nome" id="etapa_nome" class="form-control" required maxlength="250" autocomplete="off">
+                        <small id="contadorEtapa" class="text-muted d-block mt-1 text-end">0 / 250 caracteres</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Responsável:</label>
+                        <input type="text" name="responsavel" id="responsavel" class="form-control" required autocomplete="off">
+                    </div>
+                    <div class="mb-3">
+                        <label>CPF:</label>
+                        <input type="text" name="cpf" id="cpf" maxlength="14" class="form-control" placeholder="000.000.000-00" required autocomplete="off">
+                    </div>
+                    <div class="mb-3">
+                        <label>E-mail:</label>
+                        <input type="email" name="email" id="email" class="form-control" required autocomplete="off">
+                    </div>
+                    <div class="mb-3">
+                        <label>Data de Início:</label>
+                        <input type="date" name="data_inicio" id="data_inicio" class="form-control" required autocomplete="off">
+                    </div>
+                    <div class="mb-3">
+                        <label>Data de Fim:</label>
+                        <input type="date" name="data_fim" id="data_fim" class="form-control" required autocomplete="off">
+                    </div>
+                    <div class="d-flex justify-content-between mt-3">
+                        <button type="button" class="btn btn-secondary" onclick="fecharFormularioEtapa()">Voltar</button>
+                        <button type="submit" class="btn btn-padrao" id="btnCadastrarEtapa">Cadastrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Formulário oculto para exclusão -->
+<form id="formExcluirEtapaHidden" method="post" style="display: none;"></form>
+
+<script src="{{ url_for('static', filename='js/etapa.js') }}"></script>
+
+{% if mensagem_popup %}
+<script>
+    sessionStorage.setItem("mensagem_popup", "{{ mensagem_popup }}");
+</script>
+{% endif %}
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const mensagem = sessionStorage.getItem("mensagem_popup");
+    if (mensagem) {
+        alert(mensagem);
+        sessionStorage.removeItem("mensagem_popup");
+    }
+});
+</script>
+
+<!-- Script de redirecionamento para Memória de calculo -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const botao = document.getElementById("botaoMemoria");
+        if (botao) {
+            botao.addEventListener("click", () => {
+                const selecionado = document.querySelector('input[name="etapaSelecionada"]:checked');
+                if (!selecionado) {
+                    alert("Selecione uma Etapa para acessar a Memória de Cálculo.");
+                    return;
+                }
+                const etapaId = selecionado.value;
+                const url = `/memoria_calculo/{{ programa.id }}/{{ acao.id }}/{{ produto.id }}/{{ subacao_entrega.id }}/${etapaId}`;
+                window.location.href = url;
+            });
+        }
+    });
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    // Desmarca todos os radios ao carregar a página
+    document.querySelectorAll('input[name="etapaSelecionada"]').forEach(radio => {
+        radio.checked = false;
+    });
+});
+</script>
+
+
+{% endblock %}

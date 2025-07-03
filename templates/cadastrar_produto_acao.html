@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+
+{% block title %}Produtos da Ação{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- ETAPA 5 - Cadastrar Produto da Ação -->
+    <div class="col-md-6">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header etapa-titulo">Cadastrar Produto da Ação</div>
+            <div class="card-body font-sistema">
+                <p><strong>Programa Governo:</strong> {{ programa.nome }}</p>
+                <p><strong>Função:</strong> {{ programa.funcao }}</p>
+                <p><strong>Subfunção:</strong> {{ acao.subfuncao }}</p>
+                <p><strong>Ação (PAOE):</strong> {{ acao.acao_paoe }}</p>
+
+                <!-- Tabela dos produtos -->
+                <div class="table-responsive mb-3">
+                    <form method="post" id="formExcluirProduto">
+                        <table class="table table-bordered table-hover text-center">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Selecionar</th>
+                                    <th>Produto da Ação</th>
+                                    <th>Unidade de Medida</th>
+                                    <th>Quantidade</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for produto in produtos %}
+                                <tr>
+                                    <td>
+                                        <input type="radio"
+                                            name="produtoSelecionado"
+                                            value="{{ produto.id }}"
+                                            data-nome="{{ produto.nome }}"
+                                            data-un_medida="{{ produto.un_medida }}"
+                                            data-quantidade="{{ produto.quantidade }}">
+                                    </td>
+                                    <td>{{ produto.nome }}</td>
+                                    <td>{{ produto.un_medida }}</td>
+                                    <td>{{ produto.quantidade }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+
+                <!-- Botões -->
+                <style>
+                    .btn-reduzido {
+                        padding: 6px 10px;
+                        font-size: 0.85rem;
+                    }
+                </style>
+
+                <div class="d-flex justify-content-center gap-2 flex-nowrap">
+                    <a href="{{ url_for('acoes_por_programa', programa_id=programa.id) }}" class="btn btn-secondary btn-reduzido">Voltar</a>
+                    <button type="button" class="btn btn-success btn-reduzido" onclick="abrirFormularioProduto()">+ Cadastrar</button>
+                    <button type="button" class="btn btn-warning btn-reduzido" onclick="abrirFormularioProduto(true)">Alterar</button>
+                    <button type="button" class="btn btn-danger btn-reduzido" onclick="excluirProduto()">Excluir</button>
+                    <a href="#" id="botaoSubacaoEntrega" class="btn btn-padrao btn-reduzido">Subação/Entrega</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ETAPA 6 - Incluir Produto(s) da Ação -->
+    <div class="col-md-6" id="formularioProduto" style="display: none;">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header etapa-titulo">Incluir Produto(s) da Ação (Decreto 1497/2022)</div>
+            <div class="card-body font-sistema">
+                <form method="post" action="{{ url_for('inserir_produto_acao') }}" id="formProdutoAcao">
+                    <p><strong>Programa Governo:</strong> {{ programa.nome }}</p>
+                    <p><strong>Função:</strong> {{ programa.funcao }}</p>
+                    <p><strong>Subfunção:</strong> {{ acao.subfuncao }}</p>
+                    <p><strong>Ação (PAOE):</strong> {{ acao.acao_paoe }}</p>
+
+                    <!-- Campo oculto com o código da ação (PAOE) para o JS -->
+                    <input type="hidden" id="acao_paoe_info" value="{{ acao.acao_paoe }}">
+
+                    <div class="mb-3">
+                        <label>Produto da Ação:</label>
+                        <select name="nome" id="produto_acao" class="form-select" required>
+                            <option value="">Selecione um produto</option>
+                            {% for produto in produtos_disponiveis %}
+                            <option value="{{ produto }}">{{ produto }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- NOVO CAMPO: Unidade de Medida -->
+                    <div class="mb-3">
+                        <label>Unidade de Medida:</label>
+                        <select name="un_medida" id="un_medida" class="form-select" required>
+                            <option value="">Selecione a unidade</option>
+                            <option value="Unidade">Unidade</option>
+                            <option value="Percentual">Percentual</option>
+                        </select>
+                    </div>
+
+                    <!-- NOVO CAMPO: Quantidade -->
+                    <div class="mb-3">
+                        <label>Quantidade:</label>
+                        <input type="number" step="0.01" min="0" name="quantidade" id="quantidade" class="form-control" required autocomplete="off">
+                    </div>
+
+                    <!-- Campos ocultos -->
+                    <input type="hidden" name="produto_id" id="produto_id">
+                    <input type="hidden" name="acao_id" value="{{ acao.id }}">
+
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-secondary" onclick="fecharFormularioProduto()">Voltar</button>
+                        <button type="button" class="btn btn-padrao" id="btnCadastrarProduto" onclick="validarProduto()">Cadastrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script específico desta tela -->
+<script src="{{ url_for('static', filename='js/produto_acao.js') }}"></script>
+
+<!-- Script de redirecionamento para Subação/Entrega -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const botao = document.getElementById("botaoSubacaoEntrega");
+        if (botao) {
+            botao.addEventListener("click", () => {
+                const selecionado = document.querySelector('input[name="produtoSelecionado"]:checked');
+                if (!selecionado) {
+                    alert("Selecione um produto para acessar as Subações/Entregas.");
+                    return;
+                }
+                const produtoId = selecionado.value;
+                const url = `/subacoes_entrega/{{ programa.id }}/{{ acao.id }}/${produtoId}`;
+                window.location.href = url;
+            });
+        }
+    });
+</script>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <script>
+        sessionStorage.setItem("mensagemCategoria", "{{ category }}");
+        sessionStorage.setItem("mensagemTexto", "{{ message }}");
+      </script>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<!-- SweetAlert2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const categoria = sessionStorage.getItem("mensagemCategoria");
+    const texto = sessionStorage.getItem("mensagemTexto");
+
+    if (categoria && texto) {
+      Swal.fire({
+        icon: categoria === "success" ? "success" :
+              categoria === "danger" ? "error" :
+              categoria === "warning" ? "warning" : "info",
+        title: texto,
+        confirmButtonColor: '#005f5f'
+      });
+
+      // Limpar após exibir
+      sessionStorage.removeItem("mensagemCategoria");
+      sessionStorage.removeItem("mensagemTexto");
+    }
+  });
+</script>
+
+{% endblock %}

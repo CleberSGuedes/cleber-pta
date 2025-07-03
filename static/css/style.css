@@ -1,0 +1,350 @@
+/* =================== */
+/* GERAL               */
+/* =================== */
+body {
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    background-color: #f9f9f9;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+h2 {
+    color: #003B46;
+}
+
+.text-muted {
+    color: #888 !important;
+}
+
+img {
+    margin-top: 0px;
+    margin-left: 2px;
+}
+
+
+/* =================== */
+/* LOGO LATERAL        */
+/* =================== */
+.logo-container {
+    background-color: rgba(255, 255, 255, 0);
+    padding: 1px;
+}
+
+.logo-topo {
+    height: 95px;          /* define a altura desejada */
+    width: auto;            /* mantém a proporção da imagem */
+    object-fit: contain;    /* evita distorções */
+    display: block;
+}
+
+/* =================== */
+/* NAVBAR / MENU       */
+/* =================== */
+.navbar {
+    background-color: #005f5f !important;
+    border-bottom: 2px solid #004f4f;
+}
+
+.navbar .navbar-brand,
+.navbar .nav-link {
+    color: #ffffff !important;
+    font-weight: bold;
+}
+
+.navbar .nav-link:hover {
+    color: #C4DFE6 !important; /* tom claro complementar */
+}
+
+
+/* =================== */
+/* FAIXA INSTITUCIONAL */
+/* =================== */
+.institucional-bar {
+    background-color: #3c7e7e;
+    padding: 8px 20px;
+    font-weight: bold;
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: white;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.institucional-texto {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+}
+
+#usuarios-online {
+    margin-left: auto;
+    white-space: nowrap;
+}
+/* ============================= */
+/* ESTILO PADRÃO DO SISTEMA PTA */
+/* ============================= */
+
+/* Título das etapas (ETAPA 1, ETAPA 2 etc.) */
+.etapa-titulo {
+    background-color: #005f5f;
+    color: white;
+    font-weight: bold;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-top-left-radius: 0.375rem;
+    border-top-right-radius: 0.375rem;
+}
+
+/* Botão padrão do sistema (Cadastrar, Confirmar etc.) */
+.btn-padrao {
+    background-color: #005f5f;
+    color: white;
+    border: none;
+}
+
+.btn-padrao:hover {
+    background-color: #3c7e7e;
+    color: #fff;
+}
+
+/* Botão Voltar */
+.btn-secondary {
+    background-color: #6c757d;
+    border: none;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+/* Botão Excluir (mantendo o padrão Bootstrap vermelho) */
+.btn-danger {
+    background-color: #dc3545;
+    border: none;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+/* Botão Alterar (usando amarelo mais discreto) */
+.btn-warning {
+    background-color: #ffc107;
+    border: none;
+    color: #212529;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+}
+
+/* Ajuste de espaçamento geral */
+.table th, .table td {
+    vertical-align: middle !important;
+}
+
+/* Estilo visual para a opção 'Selecione um item' */
+.placeholder-option {
+    color: #888;  /* cinza claro */
+}
+
+select:invalid {
+    border: 2px solid #ff9393;
+}
+
+/* ===================== */
+/* FONTE PADRÃO DO SISTEMA */
+/* ===================== */
+.font-sistema {
+    font-size: 14px;
+}
+
+/* Para os inputs e selects do formulário */
+.form-control,
+.form-select {
+    font-size: 14px;
+}
+
+/* Para os labels dos formulários */
+label {
+    font-size: 13.5px;
+    font-weight: 500;
+}
+
+/* Para o texto da tabela */
+.table th,
+.table td {
+    font-size: 12px;
+}
+
+/* === Botões pequenos e laterais da tabela de municípios === */
+.btn-municipio {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    margin-bottom: 5px;
+    width: 100%;
+    white-space: nowrap;
+    text-align: center;
+    border-radius: 0.4rem;
+}
+
+/* Caixa de busca dentro do Select2 (dropdown aberto) */
+.select2-container--default .select2-search--dropdown .select2-search__field {
+    background-color: #f0f0f0 !important; /* Cinza claro */
+    color: #000 !important;               /* Texto preto */
+    border: 1px solid #ccc !important;    /* Borda cinza */
+}
+/* Cor de fundo ao passar o mouse sobre as opções do Select2 */
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #f0f0f0 !important; /* Cinza claro */
+    color: #000 !important;               /* Texto preto, opcional */
+}
+
+/* =================== */
+/* SEÇÃO DE NOTÍCIAS - HOME */
+/* =================== */
+.noticia-box {
+    background-color: white;
+    border-left: 5px solid #005f5f;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    padding: 20px 25px;
+    margin-bottom: 30px;
+    border-radius: 6px;
+    transition: box-shadow 0.3s ease;
+}
+
+.noticia-box:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.noticia-box h5 {
+    color: #003B46;
+    margin-bottom: 8px;
+}
+
+.noticia-box small {
+    color: #888;
+    display: block;
+    margin-bottom: 12px;
+}
+
+.noticia-box p {
+    color: #333;
+    font-size: 12.2px;
+    line-height: 1.6;
+    text-align: justify; /* 👈 esta linha justifica o texto */
+}
+
+/* =================== */
+/* RESPONSIVIDADE GERAL */
+/* =================== */
+
+.container {
+    max-width: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+@media (min-width: 576px) {
+    .container {
+        max-width: 540px;
+    }
+}
+
+@media (min-width: 768px) {
+    .container {
+        max-width: 720px;
+    }
+}
+
+@media (min-width: 992px) {
+    .container {
+        max-width: 960px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1140px;
+    }
+}
+
+/* =================== */
+/* NOTÍCIA RESPONSIVA */
+/* =================== */
+.noticia-box {
+    background: linear-gradient(to top, #d9eff380 0%, #ffffff 100%);
+    border-left: 5px solid #005f5f;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    padding: 1.5rem;
+    margin-bottom: 0.3rem;
+    border-radius: 6px;
+    transition: box-shadow 0.3s ease;
+    word-wrap: break-word;
+}
+
+.noticia-box:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.noticia-box h5 {
+    color: #003B46;
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.noticia-box small {
+    color: #888;
+    display: block;
+    margin-bottom: 0.8rem;
+    font-size: 0.875rem;
+}
+
+.noticia-box p {
+    color: #333;
+    font-size: 0.94rem;
+    line-height: 1.6;
+}
+
+.min-altura {
+    min-height: 80px; /* ajuste conforme necessário */
+}
+/* Ajustes para telas menores */
+@media (max-width: 576px) {
+    .noticia-box {
+        padding: 1rem;
+    }
+
+    .noticia-box h5 {
+        font-size: 1.1rem;
+    }
+
+    .noticia-box p {
+        font-size: 0.88rem;
+    }
+}
+
+.text-danger {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+/* =================== */
+/* AJUSTE PARA RODAPÉ FIXO */
+/* =================== */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+main.container {
+    flex: 1;
+}
