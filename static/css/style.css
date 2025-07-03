@@ -334,15 +334,17 @@ label {
   font-weight: bold;
 }
 
+/* =================== */
+/* AJUSTE PARA RODAPÉ FIXO */
+/* =================== */
 html, body {
     height: 100%;
-}
-
-body {
+    margin: 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
 }
 
-.container {
+main.container {
     flex: 1;
 }

@@ -276,26 +276,29 @@
                         </div>
                     </div>
 
-                    <!-- Responsável -->
-                    <p class="text-muted mt-4">Responsável</p>
-                    <div class="mb-3 px-2">
-                        <label>Responsável:</label>
-                        <input type="text" name="responsavel" class="form-control" required autocomplete="off">
-                    </div>
-                    <div class="mb-3 px-2">
-                        <label>CPF:</label>
-                        <input type="text" name="cpf" id="cpf" class="form-control" maxlength="14" placeholder="000.000.000-00" required autocomplete="off">
-                    </div>
-                    <div class="mb-3 px-2">
-                        <label>E-mail:</label>
-                        <input type="email" name="email" id="email" class="form-control" required autocomplete="off">
-                    </div>
+<!-- Responsável -->
+<p class="text-muted mt-4">Responsável</p>
+<div class="mb-3 px-2">
+    <label>Responsável:</label>
+    <input type="text" name="responsavel" class="form-control" required autocomplete="off">
+</div>
+<div class="mb-3 px-2">
+    <label>CPF:</label>
+    <input type="text" name="cpf" id="cpf" class="form-control" maxlength="14" placeholder="000.000.000-00" required autocomplete="off">
+</div>
+<div class="mb-3 px-2">
+    <label>E-mail:</label>
+    <input type="email" name="email" id="email" class="form-control" required autocomplete="off">
+</div>
 
-                    <div class="d-flex justify-content-between mt-3 px-2">
-                        <button type="button" class="btn btn-secondary" onclick="voltarEtapa7()">Voltar</button>
-                        <button type="button" class="btn btn-padrao" onclick="salvarSubacaoEntrega()">Cadastrar</button>
-                    </div>
-
+<div class="d-flex justify-content-between mt-3 px-2">
+    <button type="button" class="btn btn-secondary" onclick="voltarEtapa7()">Voltar</button>
+    <button type="button" class="btn btn-padrao" onclick="salvarSubacaoEntrega()">Cadastrar</button>
+</div>
+</form>
+</div>
+</div>
+</div>
 
 <!-- Primeiro define os dados globais -->
 <script>
@@ -314,10 +317,10 @@
 <!-- Script principal -->
 <script src="{{ url_for('static', filename='js/subacao_entrega.js') }}"></script>
 
-<!-- Bootstrap JS -->
+<!-- ✅ Bootstrap deve vir antes dos scripts que usam Modal -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Modal Município -->
+<!-- ✅ Modal único -->
 <div class="modal fade" id="modalMunicipio" tabindex="-1" aria-labelledby="modalMunicipioLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -326,25 +329,17 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
       </div>
       <div class="modal-body">
-
-        <!-- Campos ocultos essenciais -->
         <input type="hidden" id="municipio_id" autocomplete="off">
-
-        <!-- Código do Município -->
         <div class="mb-3">
           <label for="codigoMunicipioSelect" class="form-label">Código do Município:</label>
           <select id="codigoMunicipioSelect" class="form-select" onchange="atualizarNomeMunicipio()">
             <option value="">Selecione o código</option>
           </select>
         </div>
-
-        <!-- Nome do Município -->
         <div class="mb-3">
           <label for="nomeMunicipioInput" class="form-label">Nome do Município:</label>
           <input type="text" id="nomeMunicipioInput" class="form-control" readonly>
         </div>
-
-        <!-- Unidade de Medida -->
         <div class="mb-3">
           <label for="unidadeMedidaMunicipio" class="form-label">Unidade de Medida:</label>
           <select id="unidadeMedidaMunicipio" class="form-select">
@@ -353,16 +348,12 @@
             <option value="Percentual">Percentual</option>
           </select>
         </div>
-
-        <!-- Quantidade -->
         <div class="mb-3">
           <label for="quantidade_municipio" class="form-label">Quantidade:</label>
           <input type="text" class="form-control" id="quantidade_municipio" placeholder="00,00" autocomplete="off">
         </div>
       </div>
-
       <div class="modal-footer">
-        <!-- ✅ Botão salvar configurado corretamente -->
         <button type="button" class="btn btn-primary" onclick="salvarMunicipioTemporario()">Salvar Município</button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
       </div>
@@ -370,6 +361,7 @@
   </div>
 </div>
 
+<!-- ✅ Scripts finais -->
 <script>
 document.getElementById('formSubacaoEntrega').addEventListener('submit', function (e) {
     const linhasTabela = document.querySelectorAll('#tabelaMunicipios tbody tr');
@@ -387,42 +379,27 @@ document.addEventListener("DOMContentLoaded", function () {
         const modal = new bootstrap.Modal(document.getElementById("modalMunicipio"));
         modal.show();
     }
-});
-</script>
 
-{% if mensagem_popup %}
-<script>
-    sessionStorage.setItem("mensagem_popup", "{{ mensagem_popup }}");
-</script>
-{% endif %}
-
-<script>
-document.addEventListener("DOMContentLoaded", function () {
     const mensagem = sessionStorage.getItem("mensagem_popup");
     if (mensagem) {
         alert(mensagem);
         sessionStorage.removeItem("mensagem_popup");
     }
-});
-</script>
 
-<!-- Script de redirecionamento para Etapa -->
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const botao = document.getElementById("botaoEtapa");
-        if (botao) {
-            botao.addEventListener("click", () => {
-                const selecionado = document.querySelector('input[name="subacaoSelecionada"]:checked');
-                if (!selecionado) {
-                    alert("Selecione uma Subações/Entregas para acessar as Etapas.");
-                    return;
-                }
-                const subacaoId = selecionado.value;
-                const url = `/etapas/{{ programa.id }}/{{ acao.id }}/{{ produto.id }}/${subacaoId}`;
-                window.location.href = url;
-            });
-        }
-    });
+    const botao = document.getElementById("botaoEtapa");
+    if (botao) {
+        botao.addEventListener("click", () => {
+            const selecionado = document.querySelector('input[name="subacaoSelecionada"]:checked');
+            if (!selecionado) {
+                alert("Selecione uma Subações/Entregas para acessar as Etapas.");
+                return;
+            }
+            const subacaoId = selecionado.value;
+            const url = `/etapas/{{ programa.id }}/{{ acao.id }}/{{ produto.id }}/${subacaoId}`;
+            window.location.href = url;
+        });
+    }
+});
 </script>
 
 {% endblock %}

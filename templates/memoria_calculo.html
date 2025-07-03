@@ -104,13 +104,13 @@
 
                     <div class="mb-3">
                         <label>Itens de Despesa:</label>
-                        <input type="text" name="itens_despesa" id="item_despesa" class="form-control" maxlength="50" required oninput="atualizarContadorItem()">
+                        <input type="text" name="itens_despesa" id="item_despesa" class="form-control" maxlength="50" required autocomplete="off" oninput="atualizarContadorItem()">
                         <small id="contador_item" class="form-text text-muted">0 / 50 caracteres</small>
                     </div>
 
                     <div class="mb-3">
                         <label for="unidade_medida">Unidade de Medida:</label>
-                        <select name="unidade_medida" id="unidade_medida" class="form-select" required>
+                        <select name="unidade_medida" id="unidade_medida" class="form-select" required autocomplete="off">
                             <option value="Real (R$)">Real (R$)</option>
                         </select>
                     </div>
@@ -118,12 +118,12 @@
                     <div class="row mb-3">
                         <div class="col-md-4">
                             <label for="quantidade">Quantidade:</label>
-                            <input type="text" name="quantidade" id="quantidade" class="form-control" required>
+                            <input type="text" name="quantidade" id="quantidade" class="form-control" required autocomplete="off">
                             <input type="hidden" name="quantidade_real" id="quantidade_real">
                         </div>
                         <div class="col-md-4">
                             <label for="valor_unitario">Valor Unitário:</label>
-                            <input type="text" name="valor_unitario" id="valor_unitario" class="form-control" required>
+                            <input type="text" name="valor_unitario" id="valor_unitario" class="form-control" required autocomplete="off">
                             <input type="hidden" name="valor_unitario_real" id="valor_unitario_real">
                         </div>
                         <div class="col-md-4">
@@ -380,7 +380,7 @@
 
                     <div class="mb-3 pb-1" id="campo_legislacao" style="display: none;">
                         <label for="legislacao">Legislação: <span id="contador_legislacao" class="text-muted">(0/250)</span></label>
-                        <input type="text" name="legislacao" id="legislacao" class="form-control" maxlength="250" required>
+                        <input type="text" name="legislacao" id="legislacao" class="form-control" maxlength="250" required autocomplete="off">
                     </div>
 <br><br>
                     <div class="d-flex justify-content-between">

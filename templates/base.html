@@ -52,9 +52,16 @@
     </header>
 
     <!-- CONTEÚDO -->
-    <div class="container mt-4">
+    <main class="container mt-4">
         {% block content %}{% endblock %}
-    </div>
+    </main>
+
+    <!-- RODAPÉ -->
+    <footer class="bg-light text-center text-muted py-2 border-top small">
+        <div class="container">
+            <span>© 2025 SEDUC-MT | Núcleo de Gestão Estratégica para Resultados - NGER | Sistema PTA 2026 | Desenvolvido por Cleber S. Guedes | RELEASE_1_20250703.4</span>
+        </div>
+    </footer>
 
     <!-- JavaScript (ordem importa!) -->
     <script src="{{ url_for('static', filename='js/utils.js') }}?v={{ versao }}"></script>
@@ -77,12 +84,38 @@
     window.onload = atualizarUsuariosOnline;
     </script>
 
-    <!-- RODAPÉ -->
-    <footer class="bg-light text-center text-muted py-2 mt-5 border-top small">
-        <div class="container">
-            <span>© 2025 SEDUC-MT | Núcleo de Gestão Estratégica para Resultados - NGER | Sistema PTA 2026 | Desenvolvido por Cleber S. Guedes | RELEASE_1_20250702.4</span>
-        </div>
-    </footer>
+    <!-- SUGESTÃO 1: Função para limpar cookies do navegador (somente cookies acessíveis via JS) -->
+    <script>
+    function limparCookies() {
+        document.cookie.split(";").forEach(function(c) {
+            const chave = c.split("=")[0].trim();
+            document.cookie = chave + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        });
+    }
+    </script>
 
+    <!-- SUGESTÃO 2: Função para limpar cache do navegador (usado por PWA ou service workers) -->
+    <script>
+    function limparCache() {
+        if ('caches' in window) {
+            caches.keys().then(function(names) {
+                for (let name of names) {
+                    caches.delete(name);
+                }
+            });
+        }
+    }
+    </script>
+
+    <!-- ATENÇÃO: só descomente o trecho abaixo se realmente quiser limpar automaticamente -->
+    
+    <!-- <script>
+    window.onload = function () {
+        limparCookies();  // ⚠️ Cuidado: isso pode apagar sessões
+        limparCache();    // ⚠️ Isso remove cache de service workers
+        atualizarUsuariosOnline(); // mantém a funcionalidade já existente
+    };
+    </script> -->
+   
 </body>
 </html>

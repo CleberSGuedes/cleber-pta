@@ -169,7 +169,7 @@ document.addEventListener("DOMContentLoaded", function () {
 // 👉 Inicialização do contador de caracteres do campo etapa_nome
 const campo = document.getElementById("etapa_nome");
 const contador = document.getElementById("contadorEtapa");
-const limite = 255;
+const limite = 250;
 
 function atualizarContador() {
     const usado = campo.value.length;
@@ -180,8 +180,5 @@ if (campo && contador) {
     campo.addEventListener("input", atualizarContador);
     atualizarContador(); // inicializa ao carregar
 }
-
-
-
 
 });
